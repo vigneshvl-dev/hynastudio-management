@@ -12,6 +12,7 @@ const DEMO_PROFILES = [
   {
     id: "admin-uuid-001",
     email: "team.hynastudio@gmail.com",
+    password: "Hyna123@",
     role: "admin",
     full_name: "Hyna Admin",
     employee_id: "ADM-101",
@@ -22,6 +23,7 @@ const DEMO_PROFILES = [
   {
     id: "employee-uuid-002",
     email: "employee@hynastudio.com",
+    password: "Hyna123@",
     role: "employee",
     full_name: "Alex Vance",
     employee_id: "EMP-204",

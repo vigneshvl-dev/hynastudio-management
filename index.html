@@ -18,11 +18,37 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/splash.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
+
+  <!-- HYNAOS Splash Screen Overlay -->
+  <div class="splash-wrapper" id="splashScreen">
+    <div class="splash-bg"></div>
+    <div class="splash-glow"></div>
+
+    <div class="splash-content">
+      <div class="logo-box">
+        <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="splash-logo">
+      </div>
+
+      <h1 class="splash-title">HYNAOS</h1>
+      <p class="splash-subtitle">Hyna Studio Management System</p>
+      <p class="splash-tagline">"Run Hyna Studio from one place."</p>
+
+      <div class="splash-loading-area">
+        <span class="loading-text">Loading HYNAOS...</span>
+        <div class="loading-dots">
+          <span class="dot dot-1"></span>
+          <span class="dot dot-2"></span>
+          <span class="dot dot-3"></span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="app-container">
 
@@ -83,6 +109,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="js/splash.js"></script>
   <script src="js/supabase.js"></script>
   <script src="js/role-selection.js"></script>
   <script src="js/auth.js"></script>

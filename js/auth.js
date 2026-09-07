@@ -149,10 +149,16 @@ async function handleAdminLogin(event) {
       // Simulated Demo Authentication Delay
       await new Promise(resolve => setTimeout(resolve, 800));
 
-      const actualRole = await checkUserRole(null, email);
+      const { demoProfiles } = window.HYNAOS_SUPABASE || {};
+      const adminProfile = demoProfiles ? demoProfiles.find(p => p.email.toLowerCase() === email.toLowerCase()) : null;
 
-      // Verify Role = Admin
-      if (actualRole !== 'admin') {
+      if (!adminProfile || password !== adminProfile.password) {
+        setLoadingState(false);
+        showAlert('Incorrect email or password. Please try again.', 'danger');
+        return;
+      }
+
+      if (adminProfile.role !== 'admin') {
         setLoadingState(false);
         showAlert('You do not have Administrator access.', 'danger');
         return;
