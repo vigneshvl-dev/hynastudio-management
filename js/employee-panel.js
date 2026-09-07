@@ -337,6 +337,24 @@ function submitTaskForReview(taskId) {
   alert('Task submitted for Administrator Review successfully!');
 }
 
+function loadAllProjects() {
+  try {
+    const stored = localStorage.getItem('hynaos_projects_list');
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch(e) {
+    console.warn("Failed to load projects from storage:", e);
+  }
+  return [
+    { id: "PRJ-101", name: "HYNAOS Core Platform", manager: "Dharshan J M", lead: "Dharshan J M", assignedMembers: ["Dharshan J M", "Rohit V", "Thivan", "Anzarutheen"], progress: 85, deadline: "2026-09-30", status: "active", description: "Core enterprise platform for Hyna Studio." },
+    { id: "PRJ-102", name: "Hyna Studio Rebrand", manager: "Tharun Krishna", lead: "Tharun Krishna", assignedMembers: ["Tharun Krishna", "Linciya", "Mohamed Arshiya"], progress: 95, deadline: "2026-09-15", status: "active", description: "Visual identity design update and brand system." },
+    { id: "PRJ-103", name: "Growth Engine & CRM", manager: "Muhammed Zarif", lead: "Muhammed Zarif", assignedMembers: ["Muhammed Zarif", "Linciya", "New Appointment"], progress: 60, deadline: "2026-10-15", status: "active", description: "Generative AI marketing copy suite." },
+    { id: "PRJ-104", name: "Product Design System", manager: "Mohamed Arshiya", lead: "Mohamed Arshiya", assignedMembers: ["Mohamed Arshiya", "Tharun Krishna"], progress: 100, deadline: "2026-08-30", status: "completed", description: "Design token library and Web UI assets." },
+    { id: "PRJ-105", name: "Mobile Workspace App", manager: "Rohit V", lead: "Rohit V", assignedMembers: ["Rohit V", "Akshaya", "Thivan"], progress: 40, deadline: "2026-11-01", status: "active", description: "Mobile application for field attendance and tasks." }
+  ];
+}
+
 /**
  * Render Scoped Assigned Projects
  */
@@ -344,22 +362,79 @@ function renderMyProjects() {
   const container = document.getElementById('myProjectsContainer');
   if (!container) return;
 
-  container.innerHTML = MY_PROJECTS.map(prj => `
-    <div class="panel-card" style="margin-bottom:1.25rem;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-        <h4>${prj.name}</h4>
-        <span class="badge-status badge-${prj.status}">${prj.status}</span>
+  const allProjects = loadAllProjects();
+  const userName = (CURRENT_EMPLOYEE.name || "").toLowerCase().trim();
+  const userId = (CURRENT_EMPLOYEE.id || "").toLowerCase().trim();
+
+  // Filter projects where logged-in user is Lead or listed in assignedMembers
+  const myProjects = allProjects.filter(prj => {
+    const lead = (prj.lead || prj.manager || "").toLowerCase().trim();
+    const members = (prj.assignedMembers || []).map(m => String(m).toLowerCase().trim());
+
+    const isLead = lead && (lead === userName || lead.includes(userName) || userName.includes(lead));
+    const isMember = members.some(m => m === userName || m.includes(userName) || userName.includes(m) || (userId && m === userId));
+
+    return isLead || isMember;
+  });
+
+  // Update Stat Count Card
+  const statCount = document.getElementById('statMyProjectsCount');
+  if (statCount) {
+    statCount.textContent = String(myProjects.length).padStart(2, '0');
+  }
+
+  if (myProjects.length === 0) {
+    container.innerHTML = `
+      <div class="panel-card" style="text-align:center; padding: 2.5rem 1rem;">
+        <i data-lucide="folder-x" size="40" style="color:var(--text-muted); margin-bottom:0.75rem;"></i>
+        <h4 style="color:var(--text-muted); font-weight:600;">No Projects Assigned</h4>
+        <p style="font-size:0.85rem; color:var(--text-sub); margin-top:0.3rem;">You have not been assigned to any project yet by the Administrator.</p>
       </div>
-      <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:1rem;">Manager: <strong>${prj.manager}</strong> • Deadline: ${prj.deadline}</p>
-      <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-sub); margin-bottom:0.35rem;">
-        <span>Project Progress</span>
-        <span>${prj.progress}%</span>
+    `;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    return;
+  }
+
+  container.innerHTML = myProjects.map(prj => {
+    const leadName = prj.lead || prj.manager || "Unassigned";
+    const members = prj.assignedMembers || [leadName];
+    const membersTags = members.map(m => `<span style="display:inline-block; font-size:0.75rem; background:rgba(255,255,255,0.06); padding:0.2rem 0.5rem; border-radius:4px; margin-right:0.35rem; margin-top:0.25rem; border:1px solid rgba(255,255,255,0.1);">👤 ${m}</span>`).join('');
+
+    return `
+      <div class="panel-card" style="margin-bottom:1.25rem;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+          <div>
+            <h4 style="font-size:1.1rem; color:var(--text-white); font-weight:700;">${prj.name}</h4>
+            <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:0.2rem;">Deadline: ${prj.deadline || 'No deadline'}</span>
+          </div>
+          <span class="badge-status badge-${prj.status}">${prj.status}</span>
+        </div>
+
+        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:0.75rem;">${prj.description || ''}</p>
+
+        <div style="margin-bottom:0.75rem;">
+          <span style="font-size:0.775rem; background:rgba(234, 179, 8, 0.15); color: #fde047; padding: 0.25rem 0.6rem; border-radius: 999px; font-weight: 600; border: 1px solid rgba(234, 179, 8, 0.3);">👑 Lead: ${leadName}</span>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.725rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:0.25rem;">Assigned Team Members</label>
+          <div>${membersTags}</div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-sub); margin-bottom:0.35rem;">
+            <span>Project Completion</span>
+            <strong>${prj.progress || 0}%</strong>
+          </div>
+          <div style="height:8px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
+            <div style="height:100%; width:${prj.progress || 0}%; background:linear-gradient(90deg, #2563eb, #3b82f6); border-radius:999px;"></div>
+          </div>
+        </div>
       </div>
-      <div style="height:8px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden;">
-        <div style="height:100%; width:${prj.progress}%; background:linear-gradient(90deg, #2563eb, #3b82f6); border-radius:999px;"></div>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 /**

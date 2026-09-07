@@ -397,10 +397,17 @@
           <h2>Project Management 📁</h2>
           <p>Monitor active projects, managers, progress bars, and deadlines.</p>
         </div>
+        <button type="button" class="btn-primary" id="openAddProjectModalBtn">
+          <i data-lucide="plus-circle" size="18"></i>
+          <span>ADD NEW PROJECT</span>
+        </button>
       </div>
       <div class="panel-card">
-        <h3>ACTIVE PROJECTS MODULE</h3>
-        <p style="color:var(--text-sub); margin-top:0.5rem;">All active projects for Hyna Studio are rendered dynamically.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+          <h3>Studio Projects Directory</h3>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Assigned projects automatically sync to team dashboards</span>
+        </div>
+        <div class="projects-grid" id="projectsContainer"></div>
       </div>
     </section>
 
@@ -729,6 +736,59 @@
 
         <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
           <span>SAVE CHANGES</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Project Modal Dialog -->
+  <div class="modal-overlay" id="addProjectModal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Create & Assign New Project</h3>
+        <button type="button" class="btn-close-modal" id="closeAddProjectModalBtn">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <form id="addProjectForm" class="auth-form">
+        
+        <div class="form-group">
+          <label for="newProjectName">Project Name</label>
+          <input type="text" id="newProjectName" class="form-control" placeholder="e.g. Mobile Workspace App" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="newProjectLead">Project Lead</label>
+            <select id="newProjectLead" class="form-control" required>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="newProjectDeadline">Target Deadline</label>
+            <input type="date" id="newProjectDeadline" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem; color:var(--text-sub);">
+            Assign Team Members (Only assigned members see this project)
+          </label>
+          <div id="newProjectMembersList" class="project-members-selector" style="max-height:160px; overflow-y:auto; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem; display:grid; grid-template-columns:repeat(2, 1fr); gap:0.5rem;">
+            <!-- Dynamically populated checkboxes -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newProjectDesc">Project Description / Brief</label>
+          <textarea id="newProjectDesc" class="form-control" rows="3" placeholder="Brief explanation of project objectives..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
+          <span>CREATE & ASSIGN PROJECT 🚀</span>
         </button>
 
       </form>

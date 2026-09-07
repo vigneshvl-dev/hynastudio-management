@@ -22,32 +22,38 @@ const INITIAL_EMPLOYEES = [
 
 // Active Projects State
 const INITIAL_PROJECTS = [
-  { id: "PRJ-101", name: "HYNAOS Core Platform", manager: "Dharshan J M", progress: 85, deadline: "2026-09-30", status: "active" },
-  { id: "PRJ-102", name: "Hyna Studio Rebrand", manager: "Tharun Krishna", progress: 95, deadline: "2026-09-15", status: "active" },
-  { id: "PRJ-103", name: "Growth Engine & CRM", manager: "Muhammed Zarif", progress: 60, deadline: "2026-10-15", status: "planning" },
-  { id: "PRJ-104", name: "Product Design System", manager: "Muhammed Arshiya", progress: 100, deadline: "2026-08-30", status: "completed" },
-  { id: "PRJ-105", name: "Mobile Workspace App", manager: "Rohit V", progress: 40, deadline: "2026-11-01", status: "active" }
-];
-
-// Kanban Tasks State
-const INITIAL_TASKS = [
-  { id: "TSK-01", title: "Supabase Auth RLS Policies", desc: "Configure database row level security for profiles.", col: "todo", priority: "urgent", assignee: "Dharshan J M" },
-  { id: "TSK-02", title: "Fuzzy Bubbles Font Styling", desc: "Integrate Google Font into header typography.", col: "completed", priority: "low", assignee: "Tharun Krishna" },
-  { id: "TSK-03", title: "Kanban Board Drag & Drop", desc: "Build interactive task movement for Admin Panel.", col: "in_progress", priority: "high", assignee: "Rohit V" },
-  { id: "TSK-04", title: "Employee Salary Calculator", desc: "Auto compute Basic + Bonus - Deductions.", col: "review", priority: "medium", assignee: "Asthamil" },
-  { id: "TSK-05", title: "Data Analytics Dashboard", desc: "Create visual analytics charts for team metrics.", col: "in_progress", priority: "high", assignee: "Linciya" }
-];
-
-// Leave Requests State
-const INITIAL_LEAVES = [
-  { id: "LV-1", name: "Rohit V", type: "Sick Leave", dates: "Sep 10 - Sep 11", reason: "Medical Appointment", status: "Pending" },
-  { id: "LV-2", name: "Linciya", type: "Casual Leave", dates: "Sep 15 - Sep 16", reason: "Personal Work", status: "Pending" },
-  { id: "LV-3", name: "Anzarutheen", type: "Annual Leave", dates: "Aug 20 - Aug 22", reason: "Vacation", status: "Approved" }
+  { id: "PRJ-101", name: "HYNAOS Core Platform", manager: "Dharshan J M", lead: "Dharshan J M", assignedMembers: ["Dharshan J M", "Rohit V", "Thivan", "Anzarutheen"], progress: 85, deadline: "2026-09-30", status: "active", description: "Core enterprise platform for Hyna Studio." },
+  { id: "PRJ-102", name: "Hyna Studio Rebrand", manager: "Tharun Krishna", lead: "Tharun Krishna", assignedMembers: ["Tharun Krishna", "Linciya", "Mohamed Arshiya"], progress: 95, deadline: "2026-09-15", status: "active", description: "Visual identity design update and brand system." },
+  { id: "PRJ-103", name: "Growth Engine & CRM", manager: "Muhammed Zarif", lead: "Muhammed Zarif", assignedMembers: ["Muhammed Zarif", "Linciya", "New Appointment"], progress: 60, deadline: "2026-10-15", status: "active", description: "Generative AI marketing copy suite." },
+  { id: "PRJ-104", name: "Product Design System", manager: "Mohamed Arshiya", lead: "Mohamed Arshiya", assignedMembers: ["Mohamed Arshiya", "Tharun Krishna"], progress: 100, deadline: "2026-08-30", status: "completed", description: "Design token library and Web UI assets." },
+  { id: "PRJ-105", name: "Mobile Workspace App", manager: "Rohit V", lead: "Rohit V", assignedMembers: ["Rohit V", "Akshaya", "Thivan"], progress: 40, deadline: "2026-11-01", status: "active", description: "Mobile application for field attendance and tasks." }
 ];
 
 // State Holders
 let employeesList = [...INITIAL_EMPLOYEES];
 let projectsList = [...INITIAL_PROJECTS];
+
+function loadProjectsFromStorage() {
+  try {
+    const stored = localStorage.getItem('hynaos_projects_list');
+    if (stored) {
+      projectsList = JSON.parse(stored);
+    } else {
+      projectsList = [...INITIAL_PROJECTS];
+      localStorage.setItem('hynaos_projects_list', JSON.stringify(projectsList));
+    }
+  } catch(e) {
+    projectsList = [...INITIAL_PROJECTS];
+  }
+}
+
+function saveProjectsToStorage() {
+  try {
+    localStorage.setItem('hynaos_projects_list', JSON.stringify(projectsList));
+  } catch(e) {
+    console.warn("Failed to save projects to localStorage:", e);
+  }
+}
 let tasksList = [...INITIAL_TASKS];
 let leavesList = [...INITIAL_LEAVES];
 
@@ -60,6 +66,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNavigation();
 
   // 3. Render Dashboard Stat Cards & Tables
+  loadProjectsFromStorage();
+  populateProjectModalOptions();
   renderEmployeesTable();
   renderProjectsList();
   renderKanbanBoard();
@@ -233,24 +241,51 @@ function renderProjectsList() {
   const container = document.getElementById('projectsContainer');
   if (!container) return;
 
-  container.innerHTML = projectsList.map(prj => `
-    <div class="project-item">
-      <div class="project-item-meta">
-        <div>
-          <h4>${prj.name}</h4>
-          <span style="font-size:0.8rem; color: var(--text-muted);">Manager: ${prj.manager} • Deadline: ${prj.deadline}</span>
+  if (projectsList.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">No projects created yet. Click "+ ADD NEW PROJECT" above to create one.</p>`;
+    return;
+  }
+
+  container.innerHTML = projectsList.map(prj => {
+    const leadName = prj.lead || prj.manager || "Unassigned";
+    const members = prj.assignedMembers || [leadName];
+    const membersTags = members.map(m => `<span class="member-tag">👤 ${m}</span>`).join('');
+
+    return `
+      <div class="project-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.75rem;">
+          <div>
+            <h4 style="font-size:1.05rem; color:var(--text-white); font-weight:700;">${prj.name}</h4>
+            <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:0.2rem;">Deadline: ${prj.deadline || 'No deadline'}</span>
+          </div>
+          <span class="badge-status badge-${prj.status}">${prj.status}</span>
         </div>
-        <span class="badge-status badge-${prj.status}">${prj.status}</span>
+
+        <div style="margin-top:0.25rem;">
+          <span class="project-lead-pill"><i data-lucide="crown" size="12"></i> Lead: ${leadName}</span>
+        </div>
+
+        <div>
+          <label style="font-size:0.725rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:0.2rem;">Assigned Team Members</label>
+          <div class="project-members-tags">
+            ${membersTags}
+          </div>
+        </div>
+
+        <div style="margin-top:auto; padding-top:0.5rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub); margin-bottom:0.35rem;">
+            <span>Completion Progress</span>
+            <strong>${prj.progress || 0}%</strong>
+          </div>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar-fill" style="width: ${prj.progress || 0}%;"></div>
+          </div>
+        </div>
       </div>
-      <div style="display:flex; justify-content:space-between; font-size:0.8rem; color: var(--text-sub);">
-        <span>Progress</span>
-        <span>${prj.progress}%</span>
-      </div>
-      <div class="progress-bar-wrapper">
-        <div class="progress-bar-fill" style="width: ${prj.progress}%;"></div>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 /**
@@ -449,7 +484,34 @@ function viewEmployeeProfile(empId) {
 }
 
 /**
- * Modals & Employee Form Handlers
+ * Dynamically Populate Project Modal Options (Lead Select & Members Checkbox Grid)
+ */
+function populateProjectModalOptions() {
+  const leadSelect = document.getElementById('newProjectLead');
+  const membersGrid = document.getElementById('newProjectMembersList');
+
+  if (leadSelect) {
+    const currentVal = leadSelect.value;
+    leadSelect.innerHTML = `<option value="">-- Select Project Lead --</option>` +
+      employeesList.map(emp => `<option value="${emp.name}">${emp.name} (${emp.position || emp.department})</option>`).join('');
+    if (currentVal) leadSelect.value = currentVal;
+  }
+
+  if (membersGrid) {
+    membersGrid.innerHTML = employeesList.map(emp => `
+      <label class="checkbox-member-card">
+        <input type="checkbox" name="projectMembers" value="${emp.name}">
+        <span>
+          <strong>${emp.name}</strong>
+          <small>${emp.position || emp.department}</small>
+        </span>
+      </label>
+    `).join('');
+  }
+}
+
+/**
+ * Modals & Form Handlers
  */
 function initModals() {
   // Add Employee Modal
@@ -488,6 +550,7 @@ function initModals() {
       };
 
       employeesList.push(newEmp);
+      populateProjectModalOptions();
       renderEmployeesTable();
       addForm.reset();
       if (addModal) addModal.classList.remove('show');
@@ -534,10 +597,70 @@ function initModals() {
           initials
         };
 
+        populateProjectModalOptions();
         renderEmployeesTable();
         if (editModal) editModal.classList.remove('show');
         alert(`Employee ${name} (${empId}) updated successfully!`);
       }
+    });
+  }
+
+  // Add Project Modal Handler
+  const addProjModal = document.getElementById('addProjectModal');
+  const openAddProjBtn = document.getElementById('openAddProjectModalBtn');
+  const closeAddProjBtn = document.getElementById('closeAddProjectModalBtn');
+  const addProjForm = document.getElementById('addProjectForm');
+
+  if (openAddProjBtn && addProjModal) {
+    openAddProjBtn.addEventListener('click', () => {
+      populateProjectModalOptions();
+      addProjModal.classList.add('show');
+    });
+  }
+
+  if (closeAddProjBtn && addProjModal) {
+    closeAddProjBtn.addEventListener('click', () => addProjModal.classList.remove('show'));
+  }
+
+  if (addProjForm) {
+    addProjForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('newProjectName').value.trim();
+      const lead = document.getElementById('newProjectLead').value;
+      const deadline = document.getElementById('newProjectDeadline').value;
+      const description = document.getElementById('newProjectDescription').value.trim();
+
+      const memberCheckboxes = document.querySelectorAll('input[name="projectMembers"]:checked');
+      let selectedMembers = Array.from(memberCheckboxes).map(cb => cb.value);
+
+      if (!name || !lead) {
+        alert("Please enter project name and select a project lead.");
+        return;
+      }
+
+      // Ensure Lead is in assignedMembers array
+      if (!selectedMembers.includes(lead)) {
+        selectedMembers.unshift(lead);
+      }
+
+      const newProject = {
+        id: `PRJ-${100 + projectsList.length + 1}`,
+        name: name,
+        manager: lead,
+        lead: lead,
+        assignedMembers: selectedMembers,
+        progress: 0,
+        deadline: deadline || "TBD",
+        status: "active",
+        description: description || "No description provided."
+      };
+
+      projectsList.push(newProject);
+      saveProjectsToStorage();
+      renderProjectsList();
+      addProjForm.reset();
+      if (addProjModal) addProjModal.classList.remove('show');
+      alert(`Project "${name}" created successfully and assigned to team members!`);
     });
   }
 }
@@ -548,3 +671,5 @@ window.updateLeaveStatus = updateLeaveStatus;
 window.renderEmployeesTable = renderEmployeesTable;
 window.editEmployee = editEmployee;
 window.viewEmployeeProfile = viewEmployeeProfile;
+window.populateProjectModalOptions = populateProjectModalOptions;
+
