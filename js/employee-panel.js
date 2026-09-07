@@ -27,8 +27,11 @@ function loadUserFromStorage() {
         initials = parts[0].substring(0, 2).toUpperCase();
       }
 
+      const empId = u.employee_id || u.id || "EMP-008";
+      const savedAvatar = localStorage.getItem('hynaos_profile_avatar_' + empId) || u.avatar_url || u.avatar || null;
+
       CURRENT_EMPLOYEE = {
-        id: u.employee_id || u.id || "EMP-008",
+        id: empId,
         name: name,
         email: u.email || "",
         role: u.role || "employee",
@@ -37,7 +40,8 @@ function loadUserFromStorage() {
         joiningDate: u.joining_date || "2024-03-10",
         phone: u.phone || "+91 98765 43210",
         status: u.status || "active",
-        initials: initials
+        initials: initials,
+        avatarUrl: savedAvatar
       };
       console.log("👤 Loaded Logged In Employee Profile:", CURRENT_EMPLOYEE);
     }
@@ -413,9 +417,17 @@ function renderMyProfile() {
   const topAvatar = document.querySelector('.user-profile-badge .user-avatar');
   const topName = document.querySelector('.user-profile-badge .name');
   const topRole = document.querySelector('.user-profile-badge .role');
-  if (topAvatar) topAvatar.textContent = CURRENT_EMPLOYEE.initials;
+  
   if (topName) topName.textContent = CURRENT_EMPLOYEE.name;
   if (topRole) topRole.textContent = CURRENT_EMPLOYEE.position;
+
+  if (topAvatar) {
+    if (CURRENT_EMPLOYEE.avatarUrl) {
+      topAvatar.innerHTML = `<img src="${CURRENT_EMPLOYEE.avatarUrl}" alt="${CURRENT_EMPLOYEE.name}">`;
+    } else {
+      topAvatar.textContent = CURRENT_EMPLOYEE.initials;
+    }
+  }
 
   // Dashboard Greeting Title
   const dashWelcome = document.querySelector('#dashboardTab .page-title-group h2');
@@ -423,7 +435,86 @@ function renderMyProfile() {
 
   // Profile Tab Circle Avatar
   const profileAvatar = document.getElementById('profileAvatarCircle');
-  if (profileAvatar) profileAvatar.textContent = CURRENT_EMPLOYEE.initials;
+  const removeBtn = document.getElementById('btnRemovePhoto');
+
+  if (profileAvatar) {
+    if (CURRENT_EMPLOYEE.avatarUrl) {
+      profileAvatar.innerHTML = `<img src="${CURRENT_EMPLOYEE.avatarUrl}" alt="${CURRENT_EMPLOYEE.name}">`;
+      if (removeBtn) removeBtn.style.display = 'inline-flex';
+    } else {
+      profileAvatar.textContent = CURRENT_EMPLOYEE.initials;
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+  }
+}
+
+/**
+ * Handle Profile Image Upload
+ */
+function handleProfileImageUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file (PNG, JPG, JPEG, WebP).');
+    return;
+  }
+
+  // Limit file size to 5MB
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image file size should be less than 5MB.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    CURRENT_EMPLOYEE.avatarUrl = dataUrl;
+
+    // Persist in localStorage
+    try {
+      localStorage.setItem('hynaos_profile_avatar_' + CURRENT_EMPLOYEE.id, dataUrl);
+      
+      const stored = localStorage.getItem('hynaos_current_user');
+      if (stored) {
+        const u = JSON.parse(stored);
+        u.avatar_url = dataUrl;
+        localStorage.setItem('hynaos_current_user', JSON.stringify(u));
+      }
+    } catch(err) {
+      console.warn('Could not save avatar to localStorage:', err);
+    }
+
+    renderMyProfile();
+    console.log('✅ Profile image uploaded and updated!');
+  };
+  reader.readAsDataURL(file);
+}
+
+/**
+ * Remove Custom Profile Image
+ */
+function removeProfileImage() {
+  CURRENT_EMPLOYEE.avatarUrl = null;
+
+  try {
+    localStorage.removeItem('hynaos_profile_avatar_' + CURRENT_EMPLOYEE.id);
+    
+    const stored = localStorage.getItem('hynaos_current_user');
+    if (stored) {
+      const u = JSON.parse(stored);
+      delete u.avatar_url;
+      localStorage.setItem('hynaos_current_user', JSON.stringify(u));
+    }
+  } catch(err) {
+    console.warn('Could not remove avatar from localStorage:', err);
+  }
+
+  const fileInput = document.getElementById('profileImageInput');
+  if (fileInput) fileInput.value = '';
+
+  renderMyProfile();
+  console.log('🗑️ Profile image removed.');
 }
 
 /**
@@ -489,3 +580,5 @@ function initForms() {
 window.toggleCheckIn = toggleCheckIn;
 window.updateTaskStatus = updateTaskStatus;
 window.submitTaskForReview = submitTaskForReview;
+window.handleProfileImageUpload = handleProfileImageUpload;
+window.removeProfileImage = removeProfileImage;
