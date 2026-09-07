@@ -54,6 +54,20 @@ function saveProjectsToStorage() {
     console.warn("Failed to save projects to localStorage:", e);
   }
 }
+const INITIAL_TASKS = [
+  { id: "TSK-01", title: "Supabase Authentication Setup", desc: "Integrate Supabase Auth with RLS Policies.", priority: "urgent", assignee: "Dharshan J M", col: "completed" },
+  { id: "TSK-02", title: "Admin Panel Roster Redesign", desc: "Build responsive data tables for team members.", priority: "high", assignee: "Tharun Krishna", col: "in_progress" },
+  { id: "TSK-03", title: "Kanban Board Drag & Drop", desc: "Build interactive task movement for Admin & Employee panels.", priority: "urgent", assignee: "Rohit V", col: "in_progress" },
+  { id: "TSK-04", title: "Growth Engine Copywriter AI", desc: "Hook GPT-4 API endpoint into Growth Engine.", priority: "medium", assignee: "Muhammed Zarif", col: "todo" },
+  { id: "TSK-05", title: "Design Token Export System", desc: "Export Figma variables to CSS custom properties.", priority: "low", assignee: "Mohamed Arshiya", col: "review" }
+];
+
+const INITIAL_LEAVES = [
+  { id: "LV-1", name: "Rohit V", type: "Sick Leave", dates: "Sep 10 - Sep 11", reason: "Medical Appointment", status: "Pending" },
+  { id: "LV-2", name: "Linciya", type: "Casual Leave", dates: "Sep 15 - Sep 16", reason: "Family Event", status: "Pending" },
+  { id: "LV-3", name: "Thivan", type: "Earned Leave", dates: "Sep 20 - Sep 25", reason: "Personal Vacation", status: "Approved" }
+];
+
 let tasksList = [...INITIAL_TASKS];
 let leavesList = [...INITIAL_LEAVES];
 
@@ -628,7 +642,8 @@ function initModals() {
       const name = document.getElementById('newProjectName').value.trim();
       const lead = document.getElementById('newProjectLead').value;
       const deadline = document.getElementById('newProjectDeadline').value;
-      const description = document.getElementById('newProjectDescription').value.trim();
+      const descEl = document.getElementById('newProjectDesc') || document.getElementById('newProjectDescription');
+      const description = descEl ? descEl.value.trim() : '';
 
       const memberCheckboxes = document.querySelectorAll('input[name="projectMembers"]:checked');
       let selectedMembers = Array.from(memberCheckboxes).map(cb => cb.value);
