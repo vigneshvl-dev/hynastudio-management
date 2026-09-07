@@ -646,14 +646,15 @@
           <div class="form-group">
             <label for="newEmpDept">Department</label>
             <select id="newEmpDept" class="form-control" required>
+              <option value="Executive">Executive</option>
               <option value="Engineering">Engineering</option>
               <option value="Technology">Technology</option>
               <option value="Product">Product</option>
               <option value="Design">Design</option>
               <option value="Marketing">Marketing</option>
-              <option value="Operations">Operations</option>
+              <option value="Growth">Growth</option>
+              <option value="Strategy">Strategy</option>
               <option value="Human Resources">Human Resources</option>
-              <option value="Data & Analytics">Data & Analytics</option>
             </select>
           </div>
 
@@ -665,6 +666,69 @@
 
         <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
           <span>CREATE EMPLOYEE ACCOUNT</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Employee Modal Dialog -->
+  <div class="modal-overlay" id="editEmployeeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Employee Details</h3>
+        <button type="button" class="btn-close-modal" id="closeEditEmpModalBtn">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <form id="editEmployeeForm" class="auth-form">
+        
+        <input type="hidden" id="editEmpId">
+
+        <div class="form-group">
+          <label for="editEmpName">Full Name</label>
+          <input type="text" id="editEmpName" class="form-control" placeholder="Full Name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="editEmpEmail">Email Address</label>
+          <input type="email" id="editEmpEmail" class="form-control" placeholder="Email" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="editEmpDept">Department</label>
+            <select id="editEmpDept" class="form-control" required>
+              <option value="Executive">Executive</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Technology">Technology</option>
+              <option value="Product">Product</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Growth">Growth</option>
+              <option value="Strategy">Strategy</option>
+              <option value="Human Resources">Human Resources</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editEmpPosition">Position</label>
+            <input type="text" id="editEmpPosition" class="form-control" placeholder="Position" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editEmpStatus">Account Status</label>
+          <select id="editEmpStatus" class="form-control" required>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
+          <span>SAVE CHANGES</span>
         </button>
 
       </form>

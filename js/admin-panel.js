@@ -212,7 +212,7 @@ function renderEmployeesTable() {
         <button class="btn-icon-action" title="Edit Employee" onclick="editEmployee('${emp.id}')">
           <i data-lucide="edit-3" size="14"></i>
         </button>
-        <button class="btn-icon-action" title="View Profile">
+        <button class="btn-icon-action" title="View Profile" onclick="viewEmployeeProfile('${emp.id}')">
           <i data-lucide="eye" size="14"></i>
         </button>
       </td>
@@ -415,24 +415,59 @@ function renderPerformanceTable() {
 }
 
 /**
- * Modals & Add Employee Handler
+ * Edit Employee Action Handler
+ */
+function editEmployee(empId) {
+  const emp = employeesList.find(e => e.id === empId);
+  if (!emp) return;
+
+  const modal = document.getElementById('editEmployeeModal');
+  const idInput = document.getElementById('editEmpId');
+  const nameInput = document.getElementById('editEmpName');
+  const emailInput = document.getElementById('editEmpEmail');
+  const deptInput = document.getElementById('editEmpDept');
+  const posInput = document.getElementById('editEmpPosition');
+  const statusInput = document.getElementById('editEmpStatus');
+
+  if (idInput) idInput.value = emp.id;
+  if (nameInput) nameInput.value = emp.name;
+  if (emailInput) emailInput.value = emp.email;
+  if (deptInput) deptInput.value = emp.department || 'Engineering';
+  if (posInput) posInput.value = emp.position || 'Team Member';
+  if (statusInput) statusInput.value = emp.status || 'active';
+
+  if (modal) modal.classList.add('show');
+}
+
+/**
+ * View Employee Profile Action Handler
+ */
+function viewEmployeeProfile(empId) {
+  const emp = employeesList.find(e => e.id === empId);
+  if (!emp) return;
+  alert(`Employee Profile Details:\n\nName: ${emp.name}\nID: ${emp.id}\nEmail: ${emp.email}\nDepartment: ${emp.department}\nPosition: ${emp.position}\nStatus: ${emp.status}`);
+}
+
+/**
+ * Modals & Employee Form Handlers
  */
 function initModals() {
-  const modal = document.getElementById('addEmployeeModal');
-  const openBtn = document.getElementById('openAddEmpModalBtn');
-  const closeBtn = document.getElementById('closeAddEmpModalBtn');
-  const form = document.getElementById('addEmployeeForm');
+  // Add Employee Modal
+  const addModal = document.getElementById('addEmployeeModal');
+  const openAddBtn = document.getElementById('openAddEmpModalBtn');
+  const closeAddBtn = document.getElementById('closeAddEmpModalBtn');
+  const addForm = document.getElementById('addEmployeeForm');
 
-  if (openBtn && modal) {
-    openBtn.addEventListener('click', () => modal.classList.add('show'));
+  if (openAddBtn && addModal) {
+    openAddBtn.addEventListener('click', () => addModal.classList.add('show'));
   }
 
-  if (closeBtn && modal) {
-    closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+  if (closeAddBtn && addModal) {
+    closeAddBtn.addEventListener('click', () => addModal.classList.remove('show'));
   }
 
-  if (form) {
-    form.addEventListener('submit', (e) => {
+  if (addForm) {
+    addForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('newEmpName').value.trim();
       const email = document.getElementById('newEmpEmail').value.trim();
@@ -454,9 +489,55 @@ function initModals() {
 
       employeesList.push(newEmp);
       renderEmployeesTable();
-      form.reset();
-      if (modal) modal.classList.remove('show');
-      alert(`Employee ${name} added successfully!`);
+      addForm.reset();
+      if (addModal) addModal.classList.remove('show');
+      alert(`Employee ${name} created successfully!`);
+    });
+  }
+
+  // Edit Employee Modal
+  const editModal = document.getElementById('editEmployeeModal');
+  const closeEditBtn = document.getElementById('closeEditEmpModalBtn');
+  const editForm = document.getElementById('editEmployeeForm');
+
+  if (closeEditBtn && editModal) {
+    closeEditBtn.addEventListener('click', () => editModal.classList.remove('show'));
+  }
+
+  if (editForm) {
+    editForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const empId = document.getElementById('editEmpId').value;
+      const name = document.getElementById('editEmpName').value.trim();
+      const email = document.getElementById('editEmpEmail').value.trim();
+      const dept = document.getElementById('editEmpDept').value;
+      const pos = document.getElementById('editEmpPosition').value.trim();
+      const status = document.getElementById('editEmpStatus').value;
+
+      const empIndex = employeesList.findIndex(e => e.id === empId);
+      if (empIndex !== -1) {
+        const parts = name.split(' ').filter(Boolean);
+        let initials = "HE";
+        if (parts.length > 1) {
+          initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        } else if (parts[0]) {
+          initials = parts[0].substring(0, 2).toUpperCase();
+        }
+
+        employeesList[empIndex] = {
+          ...employeesList[empIndex],
+          name,
+          email,
+          department: dept,
+          position: pos,
+          status,
+          initials
+        };
+
+        renderEmployeesTable();
+        if (editModal) editModal.classList.remove('show');
+        alert(`Employee ${name} (${empId}) updated successfully!`);
+      }
     });
   }
 }
@@ -465,3 +546,5 @@ function initModals() {
 window.advanceTaskStatus = advanceTaskStatus;
 window.updateLeaveStatus = updateLeaveStatus;
 window.renderEmployeesTable = renderEmployeesTable;
+window.editEmployee = editEmployee;
+window.viewEmployeeProfile = viewEmployeeProfile;
