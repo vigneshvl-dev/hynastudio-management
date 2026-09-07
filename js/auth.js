@@ -249,10 +249,16 @@ async function handleEmployeeLogin(event) {
       // Simulated Demo Authentication Delay
       await new Promise(resolve => setTimeout(resolve, 800));
 
-      const actualRole = await checkUserRole(null, email);
+      const { demoProfiles } = window.HYNAOS_SUPABASE || {};
+      const empProfile = demoProfiles ? demoProfiles.find(p => p.email.toLowerCase() === email.toLowerCase()) : null;
 
-      // Verify Role = Employee
-      if (actualRole !== 'employee') {
+      if (!empProfile || password !== empProfile.password) {
+        setLoadingState(false);
+        showAlert('Incorrect email or password. Please try again.', 'danger');
+        return;
+      }
+
+      if (empProfile.role !== 'employee') {
         setLoadingState(false);
         showAlert('This account does not have Employee access.', 'danger');
         return;
