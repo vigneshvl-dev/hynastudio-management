@@ -105,7 +105,7 @@ async function verifyAdminAccess() {
   const { getClient, isDemoMode } = window.HYNAOS_SUPABASE || {};
 
   // Check demo mode or real Supabase auth
-  if (isDemoMode() || !getClient()) {
+  if (!isDemoMode || isDemoMode() || !getClient || !getClient()) {
     console.log("⚡ Admin Panel: Authorized (Demo Mode).");
     return;
   }
