@@ -271,8 +271,11 @@ async function handleEmployeeLogin(event) {
       }
 
       setLoadingState(false);
-      showAlert('Employee login verified successfully!', 'success');
+      showAlert('Employee login verified! Access granted.', 'success');
       console.log('✅ HYNAOS Employee login authorized (Demo Mode).');
+      setTimeout(() => {
+        window.location.href = 'employee-dashboard.html';
+      }, 600);
       return;
     }
 
@@ -308,6 +311,9 @@ async function handleEmployeeLogin(event) {
     // Login Success
     setLoadingState(false);
     showAlert('Employee login verified! Access granted.', 'success');
+    setTimeout(() => {
+      window.location.href = 'employee-dashboard.html';
+    }, 600);
 
   } catch (err) {
     setLoadingState(false);
