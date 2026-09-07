@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HYNAOS — Hyna Studio Management System</title>
+  <meta name="description" content="HYNAOS — Run Hyna Studio from one place. Welcome and role selection portal.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- Branding Header -->
+    <header class="brand-header">
+      <div class="brand-logo-wrapper">
+        <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="brand-logo">
+      </div>
+      <h1 class="brand-title">HYNA OS</h1>
+      <p class="brand-subtitle">Hyna Studio Management System</p>
+    </header>
+
+    <!-- Welcome Intro -->
+    <section class="welcome-intro">
+      <h2>Welcome to HYNA OS 👋</h2>
+    </section>
+
+    <!-- Role Selection Cards -->
+    <main class="roles-grid">
+
+      <!-- Admin Card -->
+      <article class="role-card role-card-admin" onclick="goToAdminLogin()" role="button" tabindex="0"
+        aria-label="Access Administrator Portal">
+        <div class="role-icon-box">
+          <i data-lucide="crown" stroke-width="2.2" size="30"></i>
+        </div>
+        <h3>ADMIN</h3>
+        <p class="role-subtitle-text">Administrator Access</p>
+        <p class="role-desc">Manage Hyna Studio operations, employees, projects, tasks, and company management.</p>
+        <button type="button" class="btn-continue" onclick="event.stopPropagation(); goToAdminLogin();">
+          <span>CONTINUE AS ADMIN →</span>
+        </button>
+      </article>
+
+      <!-- Employee Card -->
+      <article class="role-card role-card-employee" onclick="goToEmployeeLogin()" role="button" tabindex="0"
+        aria-label="Access Employee Workspace">
+        <div class="role-icon-box">
+          <i data-lucide="user" stroke-width="2.2" size="30"></i>
+        </div>
+        <h3>EMPLOYEE</h3>
+        <p class="role-subtitle-text">Employee Access</p>
+        <p class="role-desc">Access your authorized Hyna Studio workspace and company account.</p>
+        <button type="button" class="btn-continue" onclick="event.stopPropagation(); goToEmployeeLogin();">
+          <span>CONTINUE AS EMPLOYEE →</span>
+        </button>
+      </article>
+
+    </main>
+
+    <!-- Footer Accent -->
+    <footer class="app-footer-accent">
+      <div class="footer-line"></div>
+      <span>Hyna Studio &nbsp;•&nbsp; Better Together</span>
+      <div class="footer-line"></div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase.js"></script>
+  <script src="js/role-selection.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>

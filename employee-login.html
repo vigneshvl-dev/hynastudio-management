@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HYNAOS — Employee Login</title>
+  <meta name="description" content="Sign in to access your Hyna Studio employee account for HYNAOS Hyna Studio Management System.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    
+    <!-- Branding Header -->
+    <header class="brand-header">
+      <a href="index.html" class="brand-logo-wrapper" title="Return to Role Selection">
+        <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="brand-logo">
+      </a>
+      <h1 class="brand-title">HYNA OS</h1>
+      <p class="brand-subtitle">Hyna Studio Management System</p>
+    </header>
+
+    <!-- Employee Login Card Container -->
+    <main class="login-card login-card-employee">
+      
+      <div class="login-card-header">
+        <span class="login-role-badge">👨‍💻 Employee Access</span>
+        <h2>Employee Login</h2>
+        <p>Sign in to access your Hyna Studio account.</p>
+      </div>
+
+      <!-- Alert Notification Banner -->
+      <div id="alertBox" class="alert-box alert-danger hidden" role="alert">
+        <i data-lucide="alert-circle" size="18" class="alert-icon"></i>
+        <span id="alertText">An error occurred during sign in.</span>
+      </div>
+
+      <!-- Employee Login Form -->
+      <form id="employeeLoginForm" class="auth-form" novalidate>
+        
+        <!-- Email Input -->
+        <div class="form-group">
+          <label for="emailInput">Email Address</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail" size="18" class="input-icon-left"></i>
+            <input 
+              type="email" 
+              id="emailInput" 
+              class="form-control" 
+              placeholder="Enter your employee email" 
+              autocomplete="email" 
+              required
+            >
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock" size="18" class="input-icon-left"></i>
+            <input 
+              type="password" 
+              id="passwordInput" 
+              class="form-control" 
+              placeholder="Enter your password" 
+              autocomplete="current-password" 
+              required
+            >
+            <button 
+              type="button" 
+              class="toggle-password-btn" 
+              onclick="togglePassword('passwordInput', this)" 
+              title="Toggle Password Visibility"
+              aria-label="Toggle Password Visibility"
+            >
+              <i data-lucide="eye" size="18"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Meta Controls -->
+        <div class="form-meta">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <span>Remember Me</span>
+          </label>
+          <a href="#" class="forgot-link" onclick="forgotPassword(); return false;">Forgot Password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn" class="btn-submit btn-submit-employee">
+          <span id="btnSpinner" class="spinner hidden"></span>
+          <span id="btnText">SIGN IN →</span>
+        </button>
+
+      </form>
+
+      <!-- Back to Role Selection -->
+      <div class="back-link-wrapper">
+        <a href="index.html" class="back-link">
+          <i data-lucide="arrow-left" size="16"></i>
+          <span>Back to Role Selection</span>
+        </a>
+      </div>
+
+    </main>
+
+    <!-- Footer Accent -->
+    <footer class="app-footer-accent">
+      <div class="footer-line"></div>
+      <span>Hyna Studio &nbsp;•&nbsp; Better Together</span>
+      <div class="footer-line"></div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase.js"></script>
+  <script src="js/role-selection.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

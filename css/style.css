@@ -1,0 +1,721 @@
+/* ==========================================================================
+   HYNAOS — Dark Crimson Theme Stylesheet
+   Hyna Studio Management System (Dark Crimson & Glassmorphism Aesthetic)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design Tokens & CSS Variables
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand Crimson & Dark Palette */
+  --bg-dark: #120608;
+  --card-glass-bg: rgba(20, 12, 16, 0.72);
+  --card-glass-border: rgba(255, 255, 255, 0.12);
+  
+  /* Role Accent Colors */
+  --admin-crimson: #b91c1c;
+  --admin-crimson-hover: #dc2626;
+  --admin-border: rgba(185, 28, 28, 0.5);
+  --admin-glow: rgba(185, 28, 28, 0.35);
+  --admin-badge-bg: rgba(185, 28, 28, 0.18);
+
+  --employee-blue: #2563eb;
+  --employee-blue-hover: #3b82f6;
+  --employee-border: rgba(37, 99, 235, 0.45);
+  --employee-glow: rgba(37, 99, 235, 0.35);
+  --employee-badge-bg: rgba(37, 99, 235, 0.18);
+
+  /* Text Colors */
+  --text-white: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.55);
+  
+  /* Status Colors */
+  --danger: #f87171;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --success: #34d399;
+  --success-bg: rgba(16, 185, 129, 0.15);
+
+  /* Typography */
+  --font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-fuzzy: 'Fuzzy Bubbles', 'Plus Jakarta Sans', cursive, sans-serif;
+  
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.25s ease-in-out;
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Body Setup
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-dark);
+  background-image: 
+    url('../assets/bg/dark-flame-bg.svg'),
+    radial-gradient(circle at 90% 30%, rgba(185, 28, 28, 0.35) 0%, transparent 60%),
+    radial-gradient(circle at 10% 70%, rgba(153, 27, 27, 0.4) 0%, transparent 60%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   3. Main Container & Typography
+   -------------------------------------------------------------------------- */
+.app-container {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn var(--transition-smooth);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn var(--transition-smooth);
+}
+
+/* Header & Branding */
+.brand-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.brand-logo-wrapper {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  transition: transform var(--transition-normal);
+  overflow: hidden;
+}
+
+.brand-logo-wrapper:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.brand-title {
+  font-family: var(--font-family);
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--text-white);
+  line-height: 1.1;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.brand-subtitle {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
+}
+
+.brand-tagline {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.6rem;
+  display: inline-block;
+  max-width: 280px;
+}
+
+/* Page Intro Header */
+.welcome-intro {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.welcome-intro h2 {
+  font-family: var(--font-fuzzy);
+  font-size: 1.95rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.welcome-intro p {
+  font-size: 0.95rem;
+  color: var(--text-sub);
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   4. Role Selection Cards (Dark Glassmorphism)
+   -------------------------------------------------------------------------- */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.role-card {
+  background: var(--card-glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Admin Card Specifics */
+.role-card-admin {
+  border: 1.5px solid var(--admin-border);
+}
+
+.role-card-admin:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(185, 28, 28, 0.35);
+  border-color: rgba(220, 38, 38, 0.8);
+}
+
+.role-card-admin .role-icon-box {
+  background: var(--admin-badge-bg);
+  color: #f87171;
+  border: 1.5px solid rgba(248, 113, 113, 0.3);
+}
+
+.role-card-admin .btn-continue {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  box-shadow: 0 4px 18px rgba(185, 28, 28, 0.4);
+}
+
+.role-card-admin:hover .btn-continue {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 6px 24px rgba(220, 38, 38, 0.5);
+}
+
+/* Employee Card Specifics */
+.role-card-employee {
+  border: 1.5px solid var(--employee-border);
+}
+
+.role-card-employee:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(37, 99, 235, 0.35);
+  border-color: rgba(59, 130, 246, 0.8);
+}
+
+.role-card-employee .role-icon-box {
+  background: var(--employee-badge-bg);
+  color: #60a5fa;
+  border: 1.5px solid rgba(96, 165, 250, 0.3);
+}
+
+.role-card-employee .btn-continue {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.4);
+}
+
+.role-card-employee:hover .btn-continue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.5);
+}
+
+/* Shared Icon Box & Card Text */
+.role-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  transition: transform var(--transition-normal);
+}
+
+.role-card:hover .role-icon-box {
+  transform: scale(1.08);
+}
+
+.role-card h3 {
+  font-family: var(--font-fuzzy);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.role-subtitle-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.role-card p.role-desc {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  line-height: 1.55;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.btn-continue {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+}
+
+.btn-continue svg {
+  transition: transform var(--transition-fast);
+}
+
+.role-card:hover .btn-continue svg {
+  transform: translateX(4px);
+}
+
+/* --------------------------------------------------------------------------
+   5. Authentication Form Card (Login Pages)
+   -------------------------------------------------------------------------- */
+.login-card {
+  width: 100%;
+  background: var(--card-glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-glass-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.login-card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.75rem;
+}
+
+.login-card-admin .login-role-badge {
+  background: var(--admin-badge-bg);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.login-card-employee .login-role-badge {
+  background: var(--employee-badge-bg);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.login-card-header h2 {
+  font-family: var(--font-fuzzy);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.01em;
+}
+
+.login-card-header p {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
+
+/* Form Controls */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.form-control {
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  padding: 0.85rem 1rem 0.85rem 2.8rem;
+  color: var(--text-white);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
+
+.input-wrapper:focus-within .input-icon-left {
+  color: var(--text-white);
+}
+
+/* Password Toggle Icon */
+.toggle-password-btn {
+  position: absolute;
+  right: 0.85rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+}
+
+.toggle-password-btn:hover {
+  color: var(--text-white);
+}
+
+/* Form Meta Controls */
+.form-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -0.25rem;
+  font-size: 0.85rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #b91c1c;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: var(--text-sub);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.forgot-link:hover {
+  color: var(--text-white);
+  text-decoration: underline;
+}
+
+/* Submit Buttons */
+.btn-submit {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.95rem 1.5rem;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  margin-top: 0.5rem;
+}
+
+.btn-submit-admin {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  box-shadow: 0 4px 20px rgba(185, 28, 28, 0.4);
+}
+
+.btn-submit-admin:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-submit-employee {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-submit-employee:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Back Link */
+.back-link-wrapper {
+  margin-top: 1.75rem;
+  text-align: center;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--text-white);
+  transform: translateX(-3px);
+}
+
+/* --------------------------------------------------------------------------
+   6. Alert Boxes & Demo Banner
+   -------------------------------------------------------------------------- */
+.alert-box {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  animation: slideDown var(--transition-fast);
+}
+
+.alert-box.hidden {
+  display: none;
+}
+
+.alert-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.alert-success {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.alert-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Demo Notice Banner */
+.demo-banner {
+  margin-top: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px stroke rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.demo-banner code {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  color: var(--text-white);
+  font-family: monospace;
+}
+
+/* --------------------------------------------------------------------------
+   7. Footer Accent (Matching Image Design)
+   -------------------------------------------------------------------------- */
+.app-footer-accent {
+  margin-top: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.footer-line {
+  width: 60px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   8. Spinner & Animations
+   -------------------------------------------------------------------------- */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

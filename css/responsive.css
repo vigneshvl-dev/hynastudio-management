@@ -1,0 +1,112 @@
+/* ==========================================================================
+   HYNAOS — Responsive Stylesheet
+   Hyna Studio Management System
+   ========================================================================== */
+
+/* Tablet Breakpoint (Max-width: 991px) */
+@media (max-width: 991px) {
+  .app-container {
+    max-width: 720px;
+  }
+  
+  .roles-grid {
+    gap: 1.5rem;
+  }
+  
+  .role-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .brand-title {
+    font-size: 2rem;
+  }
+}
+
+/* Mobile Breakpoint (Max-width: 767px) */
+@media (max-width: 767px) {
+  body {
+    padding: 1.5rem 1rem;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  
+  .app-container,
+  .auth-container {
+    max-width: 100%;
+  }
+
+  .brand-header {
+    margin-bottom: 1.75rem;
+  }
+
+  .brand-logo-wrapper {
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .brand-title {
+    font-size: 1.75rem;
+  }
+
+  .brand-subtitle {
+    font-size: 1rem;
+  }
+
+  .welcome-intro h2 {
+    font-size: 1.4rem;
+  }
+
+  .welcome-intro p {
+    font-size: 0.9rem;
+  }
+
+  /* Single Column Stacked Cards for Mobile */
+  .roles-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .role-card {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .role-icon-box {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1.25rem;
+  }
+
+  .role-card h3 {
+    font-size: 1.3rem;
+  }
+
+  .role-card p {
+    margin-bottom: 1.5rem;
+  }
+
+  .login-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .login-card-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .form-meta {
+    flex-direction: flex-start;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+/* Small Mobile Breakpoint (Max-width: 480px) */
+@media (max-width: 480px) {
+  .btn-continue,
+  .btn-submit {
+    font-size: 0.9rem;
+    padding: 0.85rem 1.25rem;
+  }
+}
