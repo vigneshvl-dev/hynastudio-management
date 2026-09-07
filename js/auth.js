@@ -150,7 +150,12 @@ async function handleAdminLogin(event) {
       await new Promise(resolve => setTimeout(resolve, 800));
 
       const { demoProfiles } = window.HYNAOS_SUPABASE || {};
-      const adminProfile = demoProfiles ? demoProfiles.find(p => p.email.toLowerCase() === email.toLowerCase()) : null;
+      const query = email.toLowerCase();
+      const adminProfile = demoProfiles ? demoProfiles.find(p => 
+        (p.email && p.email.toLowerCase() === query) || 
+        (p.employee_id && p.employee_id.toLowerCase() === query) ||
+        (p.id && p.id.toLowerCase() === query)
+      ) : null;
 
       if (!adminProfile || password !== adminProfile.password) {
         setLoadingState(false);
@@ -256,7 +261,12 @@ async function handleEmployeeLogin(event) {
       await new Promise(resolve => setTimeout(resolve, 800));
 
       const { demoProfiles } = window.HYNAOS_SUPABASE || {};
-      const empProfile = demoProfiles ? demoProfiles.find(p => p.email.toLowerCase() === email.toLowerCase()) : null;
+      const query = email.toLowerCase();
+      const empProfile = demoProfiles ? demoProfiles.find(p => 
+        (p.email && p.email.toLowerCase() === query) || 
+        (p.employee_id && p.employee_id.toLowerCase() === query) ||
+        (p.id && p.id.toLowerCase() === query)
+      ) : null;
 
       if (!empProfile || password !== empProfile.password) {
         setLoadingState(false);

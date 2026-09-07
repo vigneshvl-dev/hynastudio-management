@@ -7,28 +7,149 @@
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-// Mock Fallback Database Profiles for seamless local testing without Supabase configuration
+// Official Hyna Studio Team Database Profiles & Login Credentials
 const DEMO_PROFILES = [
   {
-    id: "admin-uuid-001",
+    id: "ADM-101",
+    employee_id: "ADM-101",
     email: "team.hynastudio@gmail.com",
     password: "Hyna123@",
     role: "admin",
-    full_name: "Hyna Admin",
-    employee_id: "ADM-101",
-    department: "Executive Management",
-    position: "System Administrator",
+    full_name: "Vignesh",
+    department: "Executive",
+    position: "Founder & CEO",
     status: "active"
   },
   {
-    id: "employee-uuid-002",
-    email: "employee@hynastudio.com",
+    id: "EMP-001",
+    employee_id: "EMP-001",
+    email: "jashwin@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
-    full_name: "Rohit V",
+    full_name: "Jashwin J",
+    department: "Executive",
+    position: "Co-Founder & COO",
+    status: "active"
+  },
+  {
+    id: "EMP-002",
+    employee_id: "EMP-002",
+    email: "dharshan@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Dharshan J M",
+    department: "Executive",
+    position: "Co-Founder & CTO",
+    status: "active"
+  },
+  {
+    id: "EMP-003",
+    employee_id: "EMP-003",
+    email: "linciya@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Linciya",
+    department: "Marketing",
+    position: "CMO — Chief Marketing Officer",
+    status: "active"
+  },
+  {
+    id: "EMP-004",
+    employee_id: "EMP-004",
+    email: "cso@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "New Appointment",
+    department: "Strategy",
+    position: "CSO — Chief Strategy Officer",
+    status: "active"
+  },
+  {
+    id: "EMP-005",
+    employee_id: "EMP-005",
+    email: "zarif@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Muhammed Zarif",
+    department: "Growth",
+    position: "Director & Growth Manager",
+    status: "active"
+  },
+  {
+    id: "EMP-006",
+    employee_id: "EMP-006",
+    email: "arshiya@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Mohamed Arshiya",
+    department: "Product",
+    position: "CPO — Chief Product Officer",
+    status: "active"
+  },
+  {
+    id: "EMP-007",
+    employee_id: "EMP-007",
+    email: "asthamil@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Asthamil",
+    department: "Human Resources",
+    position: "HR Manager",
+    status: "active"
+  },
+  {
+    id: "EMP-008",
     employee_id: "EMP-008",
+    email: "tharun@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Tharun Krishna",
+    department: "Design",
+    position: "Designer",
+    status: "active"
+  },
+  {
+    id: "EMP-009",
+    employee_id: "EMP-009",
+    email: "akshaya@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Akshaya",
     department: "Engineering",
-    position: "Senior Developer",
+    position: "DevOps Engineer",
+    status: "active"
+  },
+  {
+    id: "EMP-010",
+    employee_id: "EMP-010",
+    email: "thivan@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Thivan",
+    department: "Engineering",
+    position: "Full Stack Developer",
+    status: "active"
+  },
+  {
+    id: "EMP-011",
+    employee_id: "EMP-011",
+    email: "rohit@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Rohit",
+    department: "Engineering",
+    position: "Full Stack Developer",
+    status: "active"
+  },
+  {
+    id: "EMP-012",
+    employee_id: "EMP-012",
+    email: "anzar@hynastudio.com",
+    password: "Hyna123@",
+    role: "employee",
+    full_name: "Anzarutheen",
+    department: "Engineering",
+    position: "Full Stack Developer",
     status: "active"
   }
 ];
