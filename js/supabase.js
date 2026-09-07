@@ -25,8 +25,8 @@ const DEMO_PROFILES = [
     email: "employee@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
-    full_name: "Alex Vance",
-    employee_id: "EMP-204",
+    full_name: "Rohit V",
+    employee_id: "EMP-008",
     department: "Engineering",
     position: "Senior Developer",
     status: "active"

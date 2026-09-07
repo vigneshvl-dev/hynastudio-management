@@ -165,8 +165,11 @@ async function handleAdminLogin(event) {
       }
 
       setLoadingState(false);
-      showAlert('Administrator login verified successfully!', 'success');
+      showAlert('Administrator login verified! Access granted.', 'success');
       console.log('✅ HYNAOS Admin login authorized (Demo Mode).');
+      setTimeout(() => {
+        window.location.href = 'admin-dashboard.html';
+      }, 600);
       return;
     }
 
@@ -202,6 +205,9 @@ async function handleAdminLogin(event) {
     // Login Success
     setLoadingState(false);
     showAlert('Administrator login verified! Access granted.', 'success');
+    setTimeout(() => {
+      window.location.href = 'admin-dashboard.html';
+    }, 600);
 
   } catch (err) {
     setLoadingState(false);

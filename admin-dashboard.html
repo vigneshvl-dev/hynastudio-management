@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HYNA OS — Admin Panel</title>
+  <meta name="description" content="HYNA OS Admin Panel — Hyna Studio Management System internal control center.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fuzzy+Bubbles:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/admin-panel.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    
+    <div class="navbar-left">
+      <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Toggle Navigation Sidebar">
+        <i data-lucide="menu" size="20"></i>
+      </button>
+      <a href="admin-dashboard.html" class="nav-brand">
+        <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="nav-brand-logo">
+        <span class="nav-brand-title">HYNA OS</span>
+      </a>
+    </div>
+
+    <!-- Global Search -->
+    <div class="navbar-search">
+      <i data-lucide="search" size="16"></i>
+      <input type="text" placeholder="Search employees, projects, tasks..." id="globalSearchInput">
+    </div>
+
+    <!-- Right Actions -->
+    <div class="navbar-right">
+      
+      <!-- Notifications Bell -->
+      <button type="button" class="nav-action-btn" id="notifBtn" title="Notifications">
+        <i data-lucide="bell" size="18"></i>
+        <span class="badge-count">3</span>
+      </button>
+
+      <!-- Notifications Dropdown -->
+      <div class="notifications-dropdown" id="notifDropdown">
+        <div class="dropdown-header">
+          <h4>Notifications</h4>
+          <span style="font-size:0.75rem; color: #ef4444; font-weight:700;">3 New</span>
+        </div>
+        <div class="notification-list">
+          <div class="notification-item">
+            <i data-lucide="check-circle-2" size="18" style="color: #34d399; margin-top:2px;"></i>
+            <div>
+              <p><strong>Tharun Krishna</strong> completed task <em>Fuzzy Bubbles Font Styling</em>.</p>
+              <span class="time">10 mins ago</span>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i data-lucide="calendar" size="18" style="color: #fbbf24; margin-top:2px;"></i>
+            <div>
+              <p>New leave request submitted by <strong>Rohit V</strong>.</p>
+              <span class="time">1 hour ago</span>
+            </div>
+          </div>
+          <div class="notification-item">
+            <i data-lucide="folder-plus" size="18" style="color: #60a5fa; margin-top:2px;"></i>
+            <div>
+              <p>New project <strong>HYNAOS Core Platform</strong> milestone updated.</p>
+              <span class="time">3 hours ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Profile Avatar -->
+      <div class="admin-user-profile" onclick="document.querySelector('[data-tab=\'profile\']').click();">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">
+          <span class="name">Vignesh</span>
+          <span class="role">Founder & CEO</span>
+        </div>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard" size="18"></i>
+          <span class="link-text">Dashboard</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="employees">
+          <i data-lucide="users" size="18"></i>
+          <span class="link-text">Employees</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="projects">
+          <i data-lucide="folder-kanban" size="18"></i>
+          <span class="link-text">Projects</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="tasks">
+          <i data-lucide="check-square" size="18"></i>
+          <span class="link-text">Tasks & Work</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="attendance">
+          <i data-lucide="clock" size="18"></i>
+          <span class="link-text">Attendance</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="leave">
+          <i data-lucide="calendar-days" size="18"></i>
+          <span class="link-text">Leave Requests</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="salary">
+          <i data-lucide="badge-indian-rupee" size="18"></i>
+          <span class="link-text">Salary</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="performance">
+          <i data-lucide="bar-chart-3" size="18"></i>
+          <span class="link-text">Performance</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="analytics">
+          <i data-lucide="line-chart" size="18"></i>
+          <span class="link-text">Analytics</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="announcements">
+          <i data-lucide="megaphone" size="18"></i>
+          <span class="link-text">Announcements</span>
+        </a>
+      </li>
+
+      <div class="sidebar-divider"></div>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="settings">
+          <i data-lucide="settings" size="18"></i>
+          <span class="link-text">Settings</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item">
+        <a href="#" class="sidebar-link" data-tab="profile">
+          <i data-lucide="user-cog" size="18"></i>
+          <span class="link-text">My Profile</span>
+        </a>
+      </li>
+
+      <li class="sidebar-menu-item" style="margin-top:auto;">
+        <a href="#" class="sidebar-link" onclick="logout(); return false;" style="color: #f87171;">
+          <i data-lucide="log-out" size="18"></i>
+          <span class="link-text">Logout</span>
+        </a>
+      </li>
+
+    </ul>
+  </aside>
+
+  <!-- Main Content Body -->
+  <main class="main-wrapper">
+    
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 1: MAIN DASHBOARD -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content active" id="dashboardTab">
+      
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Good Morning, Admin 👋</h2>
+          <p>Welcome back to HYNA OS. Here is your company overview for today.</p>
+        </div>
+        <button type="button" class="btn-primary" onclick="document.querySelector('[data-tab=\'projects\']').click();">
+          <i data-lucide="plus" size="16"></i>
+          <span>New Project</span>
+        </button>
+      </div>
+
+      <!-- Stats Cards Grid -->
+      <div class="stats-grid">
+        
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Total Employees</span>
+            <h3 class="value" id="statTotalEmployees">12</h3>
+            <span class="stat-trend trend-up"><i data-lucide="trending-up" size="12"></i> 100% Active</span>
+          </div>
+          <div class="stat-icon-box icon-crimson">
+            <i data-lucide="users" size="24"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Present Today</span>
+            <h3 class="value">10</h3>
+            <span class="stat-trend trend-up"><i data-lucide="check-circle" size="12"></i> 83% On-Time</span>
+          </div>
+          <div class="stat-icon-box icon-emerald">
+            <i data-lucide="user-check" size="24"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Active Projects</span>
+            <h3 class="value">05</h3>
+            <span class="stat-trend trend-up"><i data-lucide="folder" size="12"></i> 2 In Final Stage</span>
+          </div>
+          <div class="stat-icon-box icon-blue">
+            <i data-lucide="folder-kanban" size="24"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Completed Tasks</span>
+            <h3 class="value">48</h3>
+            <span class="stat-trend trend-up"><i data-lucide="check-square" size="12"></i> +12 this week</span>
+          </div>
+          <div class="stat-icon-box icon-emerald">
+            <i data-lucide="check-square" size="24"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Pending Tasks</span>
+            <h3 class="value">14</h3>
+            <span class="stat-trend trend-down"><i data-lucide="clock" size="12"></i> 3 Urgent</span>
+          </div>
+          <div class="stat-icon-box icon-amber">
+            <i data-lucide="hourglass" size="24"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-info">
+            <span class="title">Monthly Salary</span>
+            <h3 class="value">₹ 4.85L</h3>
+            <span class="stat-trend trend-up"><i data-lucide="shield-check" size="12"></i> Verified</span>
+          </div>
+          <div class="stat-icon-box icon-crimson">
+            <i data-lucide="badge-indian-rupee" size="24"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Dashboard Grid: Projects & Activity -->
+      <div class="dashboard-grid-2">
+        
+        <!-- Active Projects Overview -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3>PROJECT OVERVIEW</h3>
+            <a href="#" onclick="document.querySelector('[data-tab=\'projects\']').click(); return false;" style="font-size:0.8rem; color: #f87171; font-weight:700; text-decoration:none;">View All →</a>
+          </div>
+          <div id="projectsContainer"></div>
+        </div>
+
+        <!-- Recent Activities Feed -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3>RECENT ACTIVITIES</h3>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon" style="color:#34d399;"><i data-lucide="check-circle-2" size="16"></i></div>
+              <div class="activity-details">
+                <p><strong>Tharun Krishna</strong> completed task <em>Fuzzy Bubbles Font Styling</em>.</p>
+                <span class="time">10 minutes ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="color:#60a5fa;"><i data-lucide="folder-plus" size="16"></i></div>
+              <div class="activity-details">
+                <p><strong>Dharshan J M</strong> created new project <em>HYNAOS Core Platform</em>.</p>
+                <span class="time">1 hour ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="color:#fbbf24;"><i data-lucide="user-plus" size="16"></i></div>
+              <div class="activity-details">
+                <p>New employee <strong>Linciya</strong> joined as <em>Data Analyst</em>.</p>
+                <span class="time">Yesterday</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 2: EMPLOYEES MANAGEMENT -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="employeesTab">
+      
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Hyna Studio Team Roster 👥</h2>
+          <p>Manage, view, and assign official company employees.</p>
+        </div>
+        <button type="button" class="btn-primary" id="openAddEmpModalBtn">
+          <i data-lucide="user-plus" size="16"></i>
+          <span>Add Employee</span>
+        </button>
+      </div>
+
+      <div class="panel-card">
+        
+        <!-- Filters Header -->
+        <div style="display:flex; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+          <div style="position:relative; width:280px;">
+            <i data-lucide="search" size="16" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+            <input type="text" id="empSearchInput" placeholder="Search team member..." onkeyup="renderEmployeesTable()" class="form-control" style="padding-left:2.5rem; font-size:0.85rem;">
+          </div>
+          <select id="empDeptFilter" onchange="renderEmployeesTable()" class="form-control" style="width:200px; font-size:0.85rem;">
+            <option value="all">All Departments</option>
+            <option value="Executive">Executive</option>
+            <option value="Technology">Technology</option>
+            <option value="Product">Product</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Human Resources">Human Resources</option>
+            <option value="Design">Design</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Operations">Operations</option>
+            <option value="Data & Analytics">Data & Analytics</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 3: PROJECTS -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="projectsTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Project Management 📁</h2>
+          <p>Monitor active projects, managers, progress bars, and deadlines.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h3>ACTIVE PROJECTS MODULE</h3>
+        <p style="color:var(--text-sub); margin-top:0.5rem;">All active projects for Hyna Studio are rendered dynamically.</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 4: TASKS & WORK (KANBAN BOARD) -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="tasksTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Task & Work Management ✅</h2>
+          <p>Interactive Kanban board tracking task throughput.</p>
+        </div>
+      </div>
+
+      <div class="kanban-board">
+        
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <h4>TO DO 📌</h4>
+          </div>
+          <div id="kanbanColTodo"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <h4>IN PROGRESS ⚡</h4>
+          </div>
+          <div id="kanbanColInProgress"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <h4>REVIEW 🔍</h4>
+          </div>
+          <div id="kanbanColReview"></div>
+        </div>
+
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <h4>COMPLETED 🎉</h4>
+          </div>
+          <div id="kanbanColCompleted"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 5: ATTENDANCE -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="attendanceTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Attendance Management ⏰</h2>
+          <p>Track daily present, absent, and late team attendance.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h3>TODAY'S ATTENDANCE SUMMARY</h3>
+        <p style="color:var(--text-sub); margin-top:0.5rem;">10 Members Present • 2 On Leave • 0 Absent</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 6: LEAVE REQUESTS -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="leaveTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Leave Requests 📅</h2>
+          <p>Review and approve or reject employee leave applications.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Dates</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leaveTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 7: SALARY -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="salaryTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Salary Management 💰</h2>
+          <p>Secure compensation overview and payment processing.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Basic Salary</th>
+                <th>Bonus</th>
+                <th>Deductions</th>
+                <th>Net Salary</th>
+                <th>Payment Status</th>
+              </tr>
+            </thead>
+            <tbody id="salaryTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 8: PERFORMANCE -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="performanceTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Performance Management 📊</h2>
+          <p>Task completion scores, on-time ratings, and performance metrics.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Tasks Completed</th>
+                <th>On-Time Rate</th>
+                <th>Performance Score</th>
+                <th>Rating</th>
+              </tr>
+            </thead>
+            <tbody id="performanceTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 9: ANALYTICS -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="analyticsTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Company Analytics 📈</h2>
+          <p>Growth throughput and operational metrics for Hyna Studio.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h3>METRICS & THROUGHPUT</h3>
+        <p style="color:var(--text-sub); margin-top:0.5rem;">Visual operational metrics and company throughput summary.</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 10: ANNOUNCEMENTS -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="announcementsTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Company Announcements 📢</h2>
+          <p>Publish internal updates and announcements to the studio.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <div style="padding:1rem; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:1rem;">
+          <span class="priority-pill priority-urgent" style="margin-bottom:0.5rem; display:inline-block;">Urgent</span>
+          <h4>HYNAOS Release 2.0 System Deployment</h4>
+          <p style="font-size:0.85rem; color:var(--text-sub); margin-top:0.3rem;">All team members are requested to log into their updated workspace credentials.</p>
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:0.5rem;">Posted by Vignesh • Today</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 11: SETTINGS -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="settingsTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Company Settings ⚙️</h2>
+          <p>Hyna Studio configuration, hours, and system preferences.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h3>HYNA STUDIO SYSTEM PREFERENCES</h3>
+        <p style="color:var(--text-sub); margin-top:0.5rem;">Company Name: Hyna Studio • Operating Hours: 9:00 AM - 6:00 PM</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- TAB 12: ADMIN PROFILE -->
+    <!-- ----------------------------------------------------------------------- -->
+    <section class="tab-content" id="profileTab">
+      <div class="page-header">
+        <div class="page-title-group">
+          <h2>Administrator Profile 👤</h2>
+          <p>View and update account information for Vignesh.</p>
+        </div>
+      </div>
+      <div class="panel-card">
+        <h3>Vignesh — Founder & CEO</h3>
+        <p style="color:var(--text-sub); margin-top:0.5rem;">Email: team.hynastudio@gmail.com • Role: Administrator</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Add Employee Modal Dialog -->
+  <div class="modal-overlay" id="addEmployeeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add New Employee</h3>
+        <button type="button" class="btn-close-modal" id="closeAddEmpModalBtn">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <form id="addEmployeeForm" class="auth-form">
+        
+        <div class="form-group">
+          <label for="newEmpName">Full Name</label>
+          <input type="text" id="newEmpName" class="form-control" placeholder="Enter employee full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newEmpEmail">Email Address</label>
+          <input type="email" id="newEmpEmail" class="form-control" placeholder="employee@hynastudio.com" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="newEmpDept">Department</label>
+            <select id="newEmpDept" class="form-control" required>
+              <option value="Engineering">Engineering</option>
+              <option value="Technology">Technology</option>
+              <option value="Product">Product</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Operations">Operations</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Data & Analytics">Data & Analytics</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="newEmpPosition">Position</label>
+            <input type="text" id="newEmpPosition" class="form-control" placeholder="e.g. Developer" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
+          <span>CREATE EMPLOYEE ACCOUNT</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin-panel.js"></script>
+
+</body>
+</html>
