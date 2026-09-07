@@ -5,19 +5,19 @@
 
 // Initial Official Hyna Studio Team Roster
 const INITIAL_EMPLOYEES = [
-  { id: "ADM-101", name: "Vignesh", email: "team.hynastudio@gmail.com", department: "Executive", position: "Founder & CEO", joiningDate: "2024-01-01", status: "active", initials: "V" },
-  { id: "EMP-001", name: "Jashwin J", email: "jashwin@hynastudio.com", department: "Executive", position: "Co-Founder & COO", joiningDate: "2024-01-01", status: "active", initials: "JJ" },
-  { id: "EMP-002", name: "Dharshan J M", email: "dharshan@hynastudio.com", department: "Executive", position: "Co-Founder & CTO", joiningDate: "2024-01-01", status: "active", initials: "D" },
-  { id: "EMP-003", name: "Linciya", email: "linciya@hynastudio.com", department: "Marketing", position: "CMO — Chief Marketing Officer", joiningDate: "2024-02-01", status: "active", initials: "L" },
-  { id: "EMP-004", name: "New Appointment", email: "cso@hynastudio.com", department: "Strategy", position: "CSO — Chief Strategy Officer", joiningDate: "2024-02-01", status: "active", initials: "CS" },
-  { id: "EMP-005", name: "Muhammed Zarif", email: "zarif@hynastudio.com", department: "Growth", position: "Director & Growth Manager", joiningDate: "2024-02-10", status: "active", initials: "MZ" },
-  { id: "EMP-006", name: "Mohamed Arshiya", email: "arshiya@hynastudio.com", department: "Product", position: "CPO — Chief Product Officer", joiningDate: "2024-02-15", status: "active", initials: "MA" },
-  { id: "EMP-007", name: "Asthamil", email: "asthamil@hynastudio.com", department: "Human Resources", position: "HR Manager", joiningDate: "2024-02-20", status: "active", initials: "A" },
-  { id: "EMP-008", name: "Tharun Krishna", email: "tharun@hynastudio.com", department: "Design", position: "Designer", joiningDate: "2024-03-01", status: "active", initials: "TK" },
-  { id: "EMP-009", name: "Akshaya", email: "akshaya@hynastudio.com", department: "Engineering", position: "DevOps Engineer", joiningDate: "2024-03-10", status: "active", initials: "A" },
-  { id: "EMP-010", name: "Thivan", email: "thivan@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-03-15", status: "active", initials: "T" },
-  { id: "EMP-011", name: "Rohit", email: "rohit@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-03-20", status: "active", initials: "R" },
-  { id: "EMP-012", name: "Anzarutheen", email: "anzar@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-04-01", status: "active", initials: "AN" }
+  { id: "EMP-001", name: "Vignesh", email: "team.hynastudio@gmail.com", department: "Executive", position: "Founder & CEO", joiningDate: "2024-01-01", status: "active", initials: "V" },
+  { id: "EMP-002", name: "Jashwin J", email: "jashwin@hynastudio.com", department: "Executive", position: "Co-Founder & COO", joiningDate: "2024-01-01", status: "active", initials: "JJ" },
+  { id: "EMP-003", name: "Dharshan J M", email: "dharshan@hynastudio.com", department: "Executive", position: "Co-Founder & CTO", joiningDate: "2024-01-01", status: "active", initials: "D" },
+  { id: "EMP-004", name: "Linciya", email: "linciya@hynastudio.com", department: "Marketing", position: "CMO — Chief Marketing Officer", joiningDate: "2024-02-01", status: "active", initials: "L" },
+  { id: "EMP-005", name: "New Appointment", email: "cso@hynastudio.com", department: "Strategy", position: "CSO — Chief Strategy Officer", joiningDate: "2024-02-01", status: "active", initials: "CS" },
+  { id: "EMP-006", name: "Muhammed Zarif", email: "zarif@hynastudio.com", department: "Growth", position: "Director & Growth Manager", joiningDate: "2024-02-10", status: "active", initials: "MZ" },
+  { id: "EMP-007", name: "Mohamed Arshiya", email: "arshiya@hynastudio.com", department: "Product", position: "CPO — Chief Product Officer", joiningDate: "2024-02-15", status: "active", initials: "MA" },
+  { id: "EMP-008", name: "Asthamil", email: "asthamil@hynastudio.com", department: "Human Resources", position: "HR Manager", joiningDate: "2024-02-20", status: "active", initials: "A" },
+  { id: "EMP-009", name: "Tharun Krishna", email: "tharun@hynastudio.com", department: "Design", position: "Designer", joiningDate: "2024-03-01", status: "active", initials: "TK" },
+  { id: "EMP-010", name: "Akshaya", email: "akshaya@hynastudio.com", department: "Engineering", position: "DevOps Engineer", joiningDate: "2024-03-10", status: "active", initials: "A" },
+  { id: "EMP-011", name: "Thivan", email: "thivan@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-03-15", status: "active", initials: "T" },
+  { id: "EMP-012", name: "Rohit", email: "rohit@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-03-20", status: "active", initials: "R" },
+  { id: "EMP-013", name: "Anzarutheen", email: "anzar@hynastudio.com", department: "Engineering", position: "Full Stack Developer", joiningDate: "2024-04-01", status: "active", initials: "AN" }
 ];
 
 // Active Projects State

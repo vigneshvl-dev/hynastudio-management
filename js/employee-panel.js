@@ -1,21 +1,50 @@
-/**
- * HYNAOS — Employee Panel Main Controller
- * Hyna Studio Management System (Strict Personal Workspace Scoping)
- */
-
-// Logged In Employee Personal Scoped Profile (Rohit V - EMP-008)
-const CURRENT_EMPLOYEE = {
+// Logged In Employee Personal Scoped Profile (Default fallback)
+let CURRENT_EMPLOYEE = {
   id: "EMP-008",
   name: "Rohit V",
   email: "rohit@hynastudio.com",
   role: "employee",
-  position: "Senior Developer",
+  position: "Full Stack Developer",
   department: "Engineering",
   joiningDate: "2024-03-10",
   phone: "+91 98765 43210",
   status: "active",
   initials: "RV"
 };
+
+// Dynamically Load User Profile from Session / LocalStorage
+function loadUserFromStorage() {
+  try {
+    const stored = localStorage.getItem('hynaos_current_user');
+    if (stored) {
+      const u = JSON.parse(stored);
+      const name = u.full_name || u.name || "Employee";
+      const parts = name.trim().split(' ').filter(Boolean);
+      let initials = "HE";
+      if (parts.length > 1) {
+        initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      } else if (parts[0]) {
+        initials = parts[0].substring(0, 2).toUpperCase();
+      }
+
+      CURRENT_EMPLOYEE = {
+        id: u.employee_id || u.id || "EMP-008",
+        name: name,
+        email: u.email || "",
+        role: u.role || "employee",
+        position: u.position || "Team Member",
+        department: u.department || "Hyna Studio",
+        joiningDate: u.joining_date || "2024-03-10",
+        phone: u.phone || "+91 98765 43210",
+        status: u.status || "active",
+        initials: initials
+      };
+      console.log("👤 Loaded Logged In Employee Profile:", CURRENT_EMPLOYEE);
+    }
+  } catch(e) {
+    console.warn("Failed to parse stored user profile:", e);
+  }
+}
 
 // Scoped Personal Assigned Projects
 const MY_PROJECTS = [
@@ -81,6 +110,9 @@ let attendanceState = {
 
 // Page Lifecycle Initialization
 document.addEventListener('DOMContentLoaded', async () => {
+  // 0. Load Dynamic Logged In User Profile
+  loadUserFromStorage();
+
   // 1. Verify Employee Access Security
   await verifyEmployeeAccess();
 
@@ -376,6 +408,22 @@ function renderMyProfile() {
   if (idEl) idEl.textContent = CURRENT_EMPLOYEE.id;
   if (posEl) posEl.textContent = CURRENT_EMPLOYEE.position;
   if (deptEl) deptEl.textContent = CURRENT_EMPLOYEE.department;
+
+  // Header Avatar & Details
+  const topAvatar = document.querySelector('.user-profile-badge .user-avatar');
+  const topName = document.querySelector('.user-profile-badge .name');
+  const topRole = document.querySelector('.user-profile-badge .role');
+  if (topAvatar) topAvatar.textContent = CURRENT_EMPLOYEE.initials;
+  if (topName) topName.textContent = CURRENT_EMPLOYEE.name;
+  if (topRole) topRole.textContent = CURRENT_EMPLOYEE.position;
+
+  // Dashboard Greeting Title
+  const dashWelcome = document.querySelector('#dashboardTab .page-title-group h2');
+  if (dashWelcome) dashWelcome.textContent = `Good Morning, ${CURRENT_EMPLOYEE.name} 👋`;
+
+  // Profile Tab Circle Avatar
+  const profileAvatar = document.getElementById('profileAvatarCircle');
+  if (profileAvatar) profileAvatar.textContent = CURRENT_EMPLOYEE.initials;
 }
 
 /**

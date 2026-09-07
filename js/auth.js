@@ -169,6 +169,7 @@ async function handleAdminLogin(event) {
         return;
       }
 
+      localStorage.setItem('hynaos_current_user', JSON.stringify(adminProfile));
       setLoadingState(false);
       showAlert('Administrator login verified! Access granted.', 'success');
       console.log('✅ HYNAOS Admin login authorized (Demo Mode).');
@@ -197,7 +198,8 @@ async function handleAdminLogin(event) {
 
     // 4. Database Role Verification (Strict check)
     const user = authData.user;
-    const actualRole = await checkUserRole(user.id, email);
+    const { data: dbProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    const actualRole = dbProfile ? dbProfile.role : await checkUserRole(user.id, email);
 
     if (actualRole !== 'admin') {
       // Sign out unauthorized user session
@@ -205,6 +207,10 @@ async function handleAdminLogin(event) {
       setLoadingState(false);
       showAlert('You do not have Administrator access.', 'danger');
       return;
+    }
+
+    if (dbProfile) {
+      localStorage.setItem('hynaos_current_user', JSON.stringify(dbProfile));
     }
 
     // Login Success
@@ -236,12 +242,7 @@ async function handleEmployeeLogin(event) {
 
   // 1. Email Validation
   if (!email) {
-    showAlert('Please enter your employee email address.');
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    showAlert('Please enter a valid email address.');
+    showAlert('Please enter your employee ID or email address.');
     return;
   }
 
@@ -270,19 +271,14 @@ async function handleEmployeeLogin(event) {
 
       if (!empProfile || password !== empProfile.password) {
         setLoadingState(false);
-        showAlert('Incorrect email or password. Please try again.', 'danger');
+        showAlert('Incorrect Employee ID / Email or password. Please try again.', 'danger');
         return;
       }
 
-      if (empProfile.role !== 'employee') {
-        setLoadingState(false);
-        showAlert('This account does not have Employee access.', 'danger');
-        return;
-      }
-
+      localStorage.setItem('hynaos_current_user', JSON.stringify(empProfile));
       setLoadingState(false);
-      showAlert('Employee login verified! Access granted.', 'success');
-      console.log('✅ HYNAOS Employee login authorized (Demo Mode).');
+      showAlert(`Welcome ${empProfile.full_name}! Access granted.`, 'success');
+      console.log(`✅ HYNAOS Employee login authorized: ${empProfile.full_name} (${empProfile.employee_id}).`);
       setTimeout(() => {
         window.location.href = 'employee-dashboard.html';
       }, 600);
@@ -306,16 +302,12 @@ async function handleEmployeeLogin(event) {
       return;
     }
 
-    // 4. Database Role Verification (Strict check)
+    // 4. Database Role Verification
     const user = authData.user;
-    const actualRole = await checkUserRole(user.id, email);
-
-    if (actualRole !== 'employee') {
-      // Sign out unauthorized user session
-      await supabase.auth.signOut();
-      setLoadingState(false);
-      showAlert('This account does not have Employee access.', 'danger');
-      return;
+    const { data: dbProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    
+    if (dbProfile) {
+      localStorage.setItem('hynaos_current_user', JSON.stringify(dbProfile));
     }
 
     // Login Success

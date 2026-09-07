@@ -10,8 +10,8 @@ const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 // Official Hyna Studio Team Database Profiles & Login Credentials
 const DEMO_PROFILES = [
   {
-    id: "ADM-101",
-    employee_id: "ADM-101",
+    id: "EMP-001",
+    employee_id: "EMP-001",
     email: "team.hynastudio@gmail.com",
     password: "Hyna123@",
     role: "admin",
@@ -21,8 +21,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-001",
-    employee_id: "EMP-001",
+    id: "EMP-002",
+    employee_id: "EMP-002",
     email: "jashwin@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -32,8 +32,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-002",
-    employee_id: "EMP-002",
+    id: "EMP-003",
+    employee_id: "EMP-003",
     email: "dharshan@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -43,8 +43,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-003",
-    employee_id: "EMP-003",
+    id: "EMP-004",
+    employee_id: "EMP-004",
     email: "linciya@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -54,8 +54,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-004",
-    employee_id: "EMP-004",
+    id: "EMP-005",
+    employee_id: "EMP-005",
     email: "cso@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -65,8 +65,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-005",
-    employee_id: "EMP-005",
+    id: "EMP-006",
+    employee_id: "EMP-006",
     email: "zarif@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -76,8 +76,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-006",
-    employee_id: "EMP-006",
+    id: "EMP-007",
+    employee_id: "EMP-007",
     email: "arshiya@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -87,8 +87,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-007",
-    employee_id: "EMP-007",
+    id: "EMP-008",
+    employee_id: "EMP-008",
     email: "asthamil@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -98,8 +98,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-008",
-    employee_id: "EMP-008",
+    id: "EMP-009",
+    employee_id: "EMP-009",
     email: "tharun@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -109,8 +109,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-009",
-    employee_id: "EMP-009",
+    id: "EMP-010",
+    employee_id: "EMP-010",
     email: "akshaya@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -120,8 +120,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-010",
-    employee_id: "EMP-010",
+    id: "EMP-011",
+    employee_id: "EMP-011",
     email: "thivan@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -131,8 +131,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-011",
-    employee_id: "EMP-011",
+    id: "EMP-012",
+    employee_id: "EMP-012",
     email: "rohit@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
@@ -142,8 +142,8 @@ const DEMO_PROFILES = [
     status: "active"
   },
   {
-    id: "EMP-012",
-    employee_id: "EMP-012",
+    id: "EMP-013",
+    employee_id: "EMP-013",
     email: "anzar@hynastudio.com",
     password: "Hyna123@",
     role: "employee",
