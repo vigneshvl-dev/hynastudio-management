@@ -23,12 +23,14 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- 3. RLS Security Policies
 -- Policy A: Allow users to view their own profile
+DROP POLICY IF EXISTS "Allow users to view own profile" ON public.profiles;
 CREATE POLICY "Allow users to view own profile" 
 ON public.profiles 
 FOR SELECT 
 USING (auth.uid() = id);
 
 -- Policy B: Allow admins to view and manage all profiles
+DROP POLICY IF EXISTS "Allow admins to view all profiles" ON public.profiles;
 CREATE POLICY "Allow admins to view all profiles" 
 ON public.profiles 
 FOR SELECT 
@@ -39,6 +41,7 @@ USING (
     )
 );
 
+DROP POLICY IF EXISTS "Allow admins to insert profiles" ON public.profiles;
 CREATE POLICY "Allow admins to insert profiles" 
 ON public.profiles 
 FOR INSERT 
@@ -49,6 +52,7 @@ WITH CHECK (
     )
 );
 
+DROP POLICY IF EXISTS "Allow admins to update profiles" ON public.profiles;
 CREATE POLICY "Allow admins to update profiles" 
 ON public.profiles 
 FOR UPDATE 
