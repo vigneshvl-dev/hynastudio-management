@@ -22,72 +22,16 @@
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
-  <header class="top-navbar">
-    
-    <div class="navbar-left">
-      <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Toggle Navigation Sidebar">
-        <i data-lucide="menu" size="20"></i>
-      </button>
-      <a href="employee-dashboard.html" class="nav-brand">
-        <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="nav-brand-logo">
-        <span class="nav-brand-title">HYNA OS</span>
-      </a>
-    </div>
-
-    <!-- Right Actions -->
-    <div class="navbar-right">
-      
-      <!-- Refresh All Button -->
-      <button type="button" class="nav-action-btn" id="navRefreshBtn" title="Refresh All Dashboard Data" onclick="refreshAllDashboardData()">
-        <i data-lucide="refresh-cw" size="18"></i>
-      </button>
-
-      <!-- Notifications Bell -->
-      <button type="button" class="nav-action-btn" id="notifBtn" title="Notifications">
-        <i data-lucide="bell" size="18"></i>
-        <span class="badge-count">2</span>
-      </button>
-
-      <!-- Notifications Dropdown -->
-      <div class="notifications-dropdown" id="notifDropdown">
-        <div class="dropdown-header">
-          <h4>Notifications</h4>
-          <span style="font-size:0.75rem; color: #60a5fa; font-weight:700;">2 New</span>
-        </div>
-        <div class="notification-list">
-          <div class="notification-item">
-            <i data-lucide="check-square" size="18" style="color: #60a5fa; margin-top:2px;"></i>
-            <div>
-              <p>New task assigned: <strong>Kanban Board Drag & Drop</strong>.</p>
-              <span class="time">30 mins ago</span>
-            </div>
-          </div>
-          <div class="notification-item">
-            <i data-lucide="indian-rupee" size="18" style="color: #34d399; margin-top:2px;"></i>
-            <div>
-              <p>Monthly Salary of <strong>₹ 81,500</strong> has been processed.</p>
-              <span class="time">2 hours ago</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Employee Profile Avatar Badge -->
-      <div class="user-profile-badge" onclick="document.querySelector('[data-tab=\'profile\']').click();">
-        <div class="user-avatar">RV</div>
-        <div class="user-info">
-          <span class="name">Rohit V</span>
-          <span class="role">Senior Developer</span>
-        </div>
-      </div>
-
-    </div>
-
-  </header>
-
   <!-- Left Sidebar Navigation -->
   <aside class="sidebar" id="sidebar">
+    <!-- Mobile Drawer Header -->
+    <div class="sidebar-mobile-header">
+      <div class="sidebar-user-avatar" id="sidebarMobileAvatar">E</div>
+      <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" title="Close Navigation Menu">
+        <i data-lucide="x" size="20"></i>
+      </button>
+    </div>
+
     <ul class="sidebar-menu">
       
       <li class="sidebar-menu-item">
@@ -165,8 +109,76 @@
     </ul>
   </aside>
 
-  <!-- Main Content Body -->
-  <main class="main-wrapper">
+  <!-- App Content Deck Wrapper (for 3D slide navigation on mobile) -->
+  <div class="app-content-wrapper" id="appContentWrapper">
+    <div class="mobile-deck-overlay" id="mobileDeckOverlay"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-navbar">
+      
+      <div class="navbar-left">
+        <button type="button" class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Toggle Navigation Sidebar">
+          <i data-lucide="menu" size="20"></i>
+        </button>
+        <a href="employee-dashboard.html" class="nav-brand">
+          <img src="assets/logo/hynaos-logo.jpeg" alt="Hyna Studio Logo" class="nav-brand-logo">
+          <span class="nav-brand-title">HYNA OS</span>
+        </a>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="navbar-right">
+        
+        <!-- Refresh All Button -->
+        <button type="button" class="nav-action-btn" id="navRefreshBtn" title="Refresh All Dashboard Data" onclick="refreshAllDashboardData()">
+          <i data-lucide="refresh-cw" size="18"></i>
+        </button>
+
+        <!-- Notifications Bell -->
+        <button type="button" class="nav-action-btn" id="notifBtn" title="Notifications">
+          <i data-lucide="bell" size="18"></i>
+          <span class="badge-count">2</span>
+        </button>
+
+        <!-- Notifications Dropdown -->
+        <div class="notifications-dropdown" id="notifDropdown">
+          <div class="dropdown-header">
+            <h4>Notifications</h4>
+            <span style="font-size:0.75rem; color: #60a5fa; font-weight:700;">2 New</span>
+          </div>
+          <div class="notification-list">
+            <div class="notification-item">
+              <i data-lucide="check-square" size="18" style="color: #60a5fa; margin-top:2px;"></i>
+              <div>
+                <p>New task assigned: <strong>Kanban Board Drag & Drop</strong>.</p>
+                <span class="time">30 mins ago</span>
+              </div>
+            </div>
+            <div class="notification-item">
+              <i data-lucide="indian-rupee" size="18" style="color: #34d399; margin-top:2px;"></i>
+              <div>
+                <p>Monthly Salary of <strong>₹ 81,500</strong> has been processed.</p>
+                <span class="time">2 hours ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employee Profile Avatar Badge -->
+        <div class="user-profile-badge" onclick="document.querySelector('[data-tab=\'profile\']').click();">
+          <div class="user-avatar">RV</div>
+          <div class="user-info">
+            <span class="name">Rohit V</span>
+            <span class="role">Senior Developer</span>
+          </div>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="main-wrapper">
     
     <!-- ----------------------------------------------------------------------- -->
     <!-- TAB 1: MY DASHBOARD -->
@@ -617,6 +629,7 @@
     </section>
 
   </main>
+  </div> <!-- End App Content Deck Wrapper -->
 
   <!-- Edit Self Profile Modal -->
   <div class="modal-overlay" id="editEmployeeSelfModal">

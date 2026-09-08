@@ -164,15 +164,34 @@ async function verifyAdminAccess() {
 function initNavigation() {
   const sidebar = document.getElementById('sidebar');
   const toggleBtn = document.getElementById('sidebarToggleBtn');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
+  const deckOverlay = document.getElementById('mobileDeckOverlay');
   const navLinks = document.querySelectorAll('.sidebar-link');
   const tabContents = document.querySelectorAll('.tab-content');
 
-  // Sidebar Toggle Collapse
+  function closeMobileMenu() {
+    document.body.classList.remove('mobile-menu-active');
+    if (sidebar) sidebar.classList.remove('mobile-open');
+  }
+
+  // Sidebar Toggle Collapse & Mobile 3D Drawer Toggle
   if (toggleBtn && sidebar) {
     toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      sidebar.classList.toggle('mobile-open');
+      if (window.innerWidth <= 1024) {
+        document.body.classList.toggle('mobile-menu-active');
+        sidebar.classList.toggle('mobile-open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
     });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMobileMenu);
+  }
+
+  if (deckOverlay) {
+    deckOverlay.addEventListener('click', closeMobileMenu);
   }
 
   // Tab Switcher
@@ -196,9 +215,7 @@ function initNavigation() {
       });
 
       // Close Mobile Drawer on selection
-      if (window.innerWidth <= 1024) {
-        sidebar.classList.remove('mobile-open');
-      }
+      closeMobileMenu();
     });
   });
 

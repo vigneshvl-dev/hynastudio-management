@@ -276,15 +276,34 @@ async function verifyEmployeeAccess() {
 function initNavigation() {
   const sidebar = document.getElementById('sidebar');
   const toggleBtn = document.getElementById('sidebarToggleBtn');
+  const closeBtn = document.getElementById('sidebarCloseBtn');
+  const deckOverlay = document.getElementById('mobileDeckOverlay');
   const navLinks = document.querySelectorAll('.sidebar-link');
   const tabContents = document.querySelectorAll('.tab-content');
 
-  // Sidebar Collapse Toggle
+  function closeMobileMenu() {
+    document.body.classList.remove('mobile-menu-active');
+    if (sidebar) sidebar.classList.remove('mobile-open');
+  }
+
+  // Sidebar Collapse Toggle & Mobile 3D Drawer Toggle
   if (toggleBtn && sidebar) {
     toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      sidebar.classList.toggle('mobile-open');
+      if (window.innerWidth <= 1024) {
+        document.body.classList.toggle('mobile-menu-active');
+        sidebar.classList.toggle('mobile-open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
     });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMobileMenu);
+  }
+
+  if (deckOverlay) {
+    deckOverlay.addEventListener('click', closeMobileMenu);
   }
 
   // Tab Switching
@@ -305,9 +324,7 @@ function initNavigation() {
         }
       });
 
-      if (window.innerWidth <= 1024) {
-        sidebar.classList.remove('mobile-open');
-      }
+      closeMobileMenu();
     });
   });
 
@@ -621,6 +638,15 @@ function renderMyProfile() {
       topAvatar.innerHTML = `<img src="${CURRENT_EMPLOYEE.avatarUrl}" alt="${CURRENT_EMPLOYEE.name}">`;
     } else {
       topAvatar.textContent = CURRENT_EMPLOYEE.initials;
+    }
+  }
+
+  const mobileAvatar = document.getElementById('sidebarMobileAvatar');
+  if (mobileAvatar) {
+    if (CURRENT_EMPLOYEE.avatarUrl) {
+      mobileAvatar.innerHTML = `<img src="${CURRENT_EMPLOYEE.avatarUrl}" alt="${CURRENT_EMPLOYEE.name}">`;
+    } else {
+      mobileAvatar.textContent = CURRENT_EMPLOYEE.initials;
     }
   }
 
