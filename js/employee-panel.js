@@ -496,7 +496,29 @@ function renderMyProjects() {
   container.innerHTML = myProjects.map(prj => {
     const leadName = prj.lead || prj.manager || "Unassigned";
     const members = prj.assignedMembers || [leadName];
-    const membersTags = members.map(m => `<span style="display:inline-block; font-size:0.75rem; background:rgba(255,255,255,0.06); padding:0.2rem 0.5rem; border-radius:4px; margin-right:0.35rem; margin-top:0.25rem; border:1px solid rgba(255,255,255,0.1);">👤 ${m}</span>`).join('');
+    const membersTags = members.map(m => {
+      const isSelf = (CURRENT_EMPLOYEE.name.toLowerCase() === String(m).toLowerCase() || CURRENT_EMPLOYEE.id.toLowerCase() === String(m).toLowerCase());
+      const selfAvatar = isSelf ? CURRENT_EMPLOYEE.avatarUrl : null;
+      
+      let avatarUrl = selfAvatar;
+      if (!avatarUrl) {
+        try {
+          const empListStr = localStorage.getItem('hynaos_employees_list');
+          if (empListStr) {
+            const list = JSON.parse(empListStr);
+            const found = list.find(e => e.name.toLowerCase() === String(m).toLowerCase() || e.id.toLowerCase() === String(m).toLowerCase());
+            if (found) {
+              avatarUrl = localStorage.getItem('hynaos_profile_avatar_' + found.id) || found.avatarUrl || found.avatar_url || null;
+            }
+          }
+        } catch(e) {}
+      }
+
+      if (avatarUrl) {
+        return `<span style="display:inline-flex; align-items:center; gap:0.25rem; font-size:0.75rem; background:rgba(255,255,255,0.06); padding:0.2rem 0.5rem; border-radius:4px; margin-right:0.35rem; margin-top:0.25rem; border:1px solid rgba(255,255,255,0.1);"><img src="${avatarUrl}" alt="${m}" style="width:16px; height:16px; border-radius:50%; object-fit:cover;"> ${m}</span>`;
+      }
+      return `<span style="display:inline-block; font-size:0.75rem; background:rgba(255,255,255,0.06); padding:0.2rem 0.5rem; border-radius:4px; margin-right:0.35rem; margin-top:0.25rem; border:1px solid rgba(255,255,255,0.1);">👤 ${m}</span>`;
+    }).join('');
 
     return `
       <div class="panel-card" style="margin-bottom:1.25rem;">
@@ -659,6 +681,13 @@ function handleProfileImageUpload(event) {
     }
 
     renderMyProfile();
+    try {
+      window.dispatchEvent(new Event('storage'));
+      window.dispatchEvent(new Event('hynaos_employees_updated'));
+    } catch(err) {}
+    if (typeof showHynaToast === 'function') {
+      showHynaToast('Profile photo updated successfully!', 'image');
+    }
     console.log('✅ Profile image uploaded and updated!');
   };
   reader.readAsDataURL(file);
@@ -687,6 +716,13 @@ function removeProfileImage() {
   if (fileInput) fileInput.value = '';
 
   renderMyProfile();
+  try {
+    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event('hynaos_employees_updated'));
+  } catch(err) {}
+  if (typeof showHynaToast === 'function') {
+    showHynaToast('Profile photo removed', 'trash-2');
+  }
   console.log('🗑️ Profile image removed.');
 }
 
