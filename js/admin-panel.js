@@ -239,11 +239,15 @@ function renderEmployeesTable() {
     return matchesSearch && matchesDept;
   });
 
-  tbody.innerHTML = filtered.map(emp => `
+  tbody.innerHTML = filtered.map(emp => {
+    const avatarUrl = localStorage.getItem('hynaos_profile_avatar_' + emp.id) || emp.avatarUrl || emp.avatar_url || emp.avatar || null;
+    const avatarInner = avatarUrl ? `<img src="${avatarUrl}" alt="${emp.name}">` : emp.initials;
+
+    return `
     <tr>
       <td>
         <div class="user-cell">
-          <div class="user-avatar-sm">${emp.initials}</div>
+          <div class="user-avatar-sm" style="${avatarUrl ? 'padding:0;' : ''}">${avatarInner}</div>
           <div>
             <strong>${emp.name}</strong>
             <div style="font-size:0.75rem; color: var(--text-muted);">${emp.email}</div>
@@ -263,7 +267,8 @@ function renderEmployeesTable() {
         </button>
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 
   // Update total count
   const countEl = document.getElementById('statTotalEmployees');
@@ -293,7 +298,16 @@ function renderProjectsList() {
   const html = projectsList.map(prj => {
     const leadName = prj.lead || prj.manager || "Unassigned";
     const members = prj.assignedMembers || [leadName];
-    const membersTags = members.map(m => `<span class="member-tag">👤 ${m}</span>`).join('');
+    const membersTags = members.map(m => {
+      const foundEmp = Array.isArray(employeesList) ? employeesList.find(e => e.name.toLowerCase() === String(m).toLowerCase() || e.id.toLowerCase() === String(m).toLowerCase()) : null;
+      const empId = foundEmp ? foundEmp.id : null;
+      const avatarUrl = empId ? (localStorage.getItem('hynaos_profile_avatar_' + empId) || foundEmp.avatarUrl || foundEmp.avatar_url || null) : null;
+      
+      if (avatarUrl) {
+        return `<span class="member-tag" style="display:inline-flex; align-items:center; gap:0.25rem;"><img src="${avatarUrl}" alt="${m}" style="width:16px; height:16px; border-radius:50%; object-fit:cover;"> ${m}</span>`;
+      }
+      return `<span class="member-tag">👤 ${m}</span>`;
+    }).join('');
 
     return `
       <div class="project-card">
