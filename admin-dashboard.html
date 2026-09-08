@@ -44,6 +44,11 @@
     <!-- Right Actions -->
     <div class="navbar-right">
       
+      <!-- Refresh All Button -->
+      <button type="button" class="nav-action-btn" id="navRefreshBtn" title="Refresh All Dashboard Data" onclick="refreshAllDashboardData()">
+        <i data-lucide="refresh-cw" size="18"></i>
+      </button>
+
       <!-- Notifications Bell -->
       <button type="button" class="nav-action-btn" id="notifBtn" title="Notifications">
         <i data-lucide="bell" size="18"></i>
@@ -207,10 +212,16 @@
           <h2>Good Morning, Admin 👋</h2>
           <p>Welcome back to HYNA OS. Here is your company overview for today.</p>
         </div>
-        <button type="button" class="btn-primary" onclick="document.querySelector('[data-tab=\'projects\']').click();">
-          <i data-lucide="plus" size="16"></i>
-          <span>New Project</span>
-        </button>
+        <div class="header-actions" style="display: flex; gap: 0.75rem; align-items: center;">
+          <button type="button" class="btn-secondary" id="pageRefreshBtn" onclick="refreshAllDashboardData()" title="Refresh All Data">
+            <i data-lucide="refresh-cw" size="16"></i>
+            <span>Refresh All</span>
+          </button>
+          <button type="button" class="btn-primary" onclick="document.querySelector('[data-tab=\'projects\']').click();">
+            <i data-lucide="plus" size="16"></i>
+            <span>New Project</span>
+          </button>
+        </div>
       </div>
 
       <!-- Stats Cards Grid -->
@@ -219,7 +230,7 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Total Employees</span>
-            <h3 class="value" id="statTotalEmployees">12</h3>
+            <h3 class="value" id="statTotalEmployees">13</h3>
             <span class="stat-trend trend-up"><i data-lucide="trending-up" size="12"></i> 100% Active</span>
           </div>
           <div class="stat-icon-box icon-crimson">
@@ -230,8 +241,8 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Present Today</span>
-            <h3 class="value">10</h3>
-            <span class="stat-trend trend-up"><i data-lucide="check-circle" size="12"></i> 83% On-Time</span>
+            <h3 class="value" id="statPresentToday">11</h3>
+            <span class="stat-trend trend-up"><i data-lucide="check-circle" size="12"></i> 85% On-Time</span>
           </div>
           <div class="stat-icon-box icon-emerald">
             <i data-lucide="user-check" size="24"></i>
@@ -241,7 +252,7 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Active Projects</span>
-            <h3 class="value">05</h3>
+            <h3 class="value" id="statActiveProjects">04</h3>
             <span class="stat-trend trend-up"><i data-lucide="folder" size="12"></i> 2 In Final Stage</span>
           </div>
           <div class="stat-icon-box icon-blue">
@@ -252,7 +263,7 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Completed Tasks</span>
-            <h3 class="value">48</h3>
+            <h3 class="value" id="statCompletedTasks">48</h3>
             <span class="stat-trend trend-up"><i data-lucide="check-square" size="12"></i> +12 this week</span>
           </div>
           <div class="stat-icon-box icon-emerald">
@@ -263,7 +274,7 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Pending Tasks</span>
-            <h3 class="value">14</h3>
+            <h3 class="value" id="statPendingTasks">14</h3>
             <span class="stat-trend trend-down"><i data-lucide="clock" size="12"></i> 3 Urgent</span>
           </div>
           <div class="stat-icon-box icon-amber">
@@ -274,7 +285,7 @@
         <div class="stat-card">
           <div class="stat-info">
             <span class="title">Monthly Salary</span>
-            <h3 class="value">₹ 4.85L</h3>
+            <h3 class="value" id="statMonthlySalary">₹ 4.85L</h3>
             <span class="stat-trend trend-up"><i data-lucide="shield-check" size="12"></i> Verified</span>
           </div>
           <div class="stat-icon-box icon-crimson">

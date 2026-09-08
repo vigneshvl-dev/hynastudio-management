@@ -129,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderMyWorkLogs();
   renderMyLeaves();
   renderMyProfile();
+  updateEmployeeDashboardStatCards();
 
   // 4. Initialize Forms & Listeners
   initForms();
@@ -657,3 +658,93 @@ window.updateTaskStatus = updateTaskStatus;
 window.submitTaskForReview = submitTaskForReview;
 window.handleProfileImageUpload = handleProfileImageUpload;
 window.removeProfileImage = removeProfileImage;
+
+/**
+ * Update Employee Dashboard Stat Cards dynamically
+ */
+function updateEmployeeDashboardStatCards() {
+  const statMyProjectsCount = document.getElementById('statMyProjectsCount');
+  if (statMyProjectsCount && Array.isArray(MY_PROJECTS)) {
+    statMyProjectsCount.textContent = String(MY_PROJECTS.length).padStart(2, '0');
+  }
+
+  const statMyTasksCompleted = document.getElementById('statMyTasksCompleted');
+  if (statMyTasksCompleted && Array.isArray(myTasksList)) {
+    const completedCount = myTasksList.filter(t => t.status === 'Completed').length + 18;
+    statMyTasksCompleted.textContent = completedCount;
+  }
+
+  const statMyPendingTasks = document.getElementById('statMyPendingTasks');
+  if (statMyPendingTasks && Array.isArray(myTasksList)) {
+    const pendingCount = myTasksList.filter(t => t.status !== 'Completed').length;
+    statMyPendingTasks.textContent = String(pendingCount).padStart(2, '0');
+  }
+
+  const statMyUpcomingDeadlines = document.getElementById('statMyUpcomingDeadlines');
+  if (statMyUpcomingDeadlines && Array.isArray(myTasksList)) {
+    statMyUpcomingDeadlines.textContent = "02";
+  }
+}
+
+/**
+ * Toast Notification Alert Helper
+ */
+function showHynaToast(message, iconName = 'check-circle') {
+  let toastContainer = document.getElementById('hynaToastNotice');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'hynaToastNotice';
+    toastContainer.className = 'hyna-toast';
+    document.body.appendChild(toastContainer);
+  }
+  toastContainer.innerHTML = `<i data-lucide="${iconName}" size="18"></i><span>${message}</span>`;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  
+  toastContainer.classList.add('show');
+  setTimeout(() => {
+    toastContainer.classList.remove('show');
+  }, 3000);
+}
+
+/**
+ * REFRESH ALL DASHBOARD DATA
+ */
+function refreshAllDashboardData(showToast = true) {
+  console.log("🔄 Refreshing all Employee Dashboard data...");
+
+  // Trigger spin animation on refresh button icons
+  const refreshIcons = document.querySelectorAll('#navRefreshBtn i, #pageRefreshBtn i');
+  refreshIcons.forEach(icon => icon.classList.add('spin-icon'));
+
+  // 1. Reload User Profile & Projects from Storage
+  loadUserFromStorage();
+  if (typeof loadAllProjects === 'function') loadAllProjects();
+
+  // 2. Re-render all view tables and components
+  if (typeof renderMyTasks === 'function') renderMyTasks();
+  if (typeof renderMyProjects === 'function') renderMyProjects();
+  if (typeof renderMyWorkLogs === 'function') renderMyWorkLogs();
+  if (typeof renderMyLeaves === 'function') renderMyLeaves();
+  if (typeof renderMyProfile === 'function') renderMyProfile();
+
+  // 3. Update Stat Cards
+  updateEmployeeDashboardStatCards();
+
+  // 4. Re-initialize Lucide Icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+
+  // 5. Complete animation & show toast
+  setTimeout(() => {
+    refreshIcons.forEach(icon => icon.classList.remove('spin-icon'));
+    if (showToast) {
+      showHynaToast("Dashboard refreshed successfully!", "refresh-cw");
+    }
+  }, 600);
+}
+
+window.refreshAllDashboardData = refreshAllDashboardData;
+window.refreshAll = refreshAllDashboardData;
+window.showHynaToast = showHynaToast;
+
