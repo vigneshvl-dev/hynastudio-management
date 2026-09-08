@@ -253,15 +253,21 @@ function renderEmployeesTable() {
  * Render Projects List & Overview
  */
 function renderProjectsList() {
-  const container = document.getElementById('projectsContainer');
-  if (!container) return;
+  const containers = [
+    document.getElementById('projectsContainer'),
+    document.getElementById('projectsDirectoryContainer')
+  ].filter(Boolean);
+
+  if (containers.length === 0) return;
 
   if (projectsList.length === 0) {
-    container.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">No projects created yet. Click "+ ADD NEW PROJECT" above to create one.</p>`;
+    containers.forEach(c => {
+      c.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">No projects created yet. Click "+ ADD NEW PROJECT" above to create one.</p>`;
+    });
     return;
   }
 
-  container.innerHTML = projectsList.map(prj => {
+  const html = projectsList.map(prj => {
     const leadName = prj.lead || prj.manager || "Unassigned";
     const members = prj.assignedMembers || [leadName];
     const membersTags = members.map(m => `<span class="member-tag">👤 ${m}</span>`).join('');
@@ -276,18 +282,20 @@ function renderProjectsList() {
           <span class="badge-status badge-${prj.status}">${prj.status}</span>
         </div>
 
+        <p style="font-size:0.8rem; color:var(--text-sub); margin-top:0.4rem; margin-bottom:0.4rem;">${prj.description || ''}</p>
+
         <div style="margin-top:0.25rem;">
           <span class="project-lead-pill"><i data-lucide="crown" size="12"></i> Lead: ${leadName}</span>
         </div>
 
-        <div>
+        <div style="margin-top:0.5rem;">
           <label style="font-size:0.725rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; display:block; margin-bottom:0.2rem;">Assigned Team Members</label>
           <div class="project-members-tags">
             ${membersTags}
           </div>
         </div>
 
-        <div style="margin-top:auto; padding-top:0.5rem;">
+        <div style="margin-top:auto; padding-top:0.75rem;">
           <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub); margin-bottom:0.35rem;">
             <span>Completion Progress</span>
             <strong>${prj.progress || 0}%</strong>
@@ -299,6 +307,10 @@ function renderProjectsList() {
       </div>
     `;
   }).join('');
+
+  containers.forEach(c => {
+    c.innerHTML = html;
+  });
 
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
@@ -515,7 +527,7 @@ function populateProjectModalOptions() {
   if (membersGrid) {
     membersGrid.innerHTML = employeesList.map(emp => `
       <label class="checkbox-member-card">
-        <input type="checkbox" name="projectMembers" value="${emp.name}">
+        <input type="checkbox" name="projectMembers" value="${emp.name}" checked>
         <span>
           <strong>${emp.name}</strong>
           <small>${emp.position || emp.department}</small>
@@ -654,6 +666,11 @@ function initModals() {
         return;
       }
 
+      // If no members selected, default to all team members
+      if (selectedMembers.length === 0 && Array.isArray(employeesList)) {
+        selectedMembers = employeesList.map(emp => emp.name);
+      }
+
       // Ensure Lead is in assignedMembers array
       if (!selectedMembers.includes(lead)) {
         selectedMembers.unshift(lead);
@@ -674,9 +691,24 @@ function initModals() {
       projectsList.push(newProject);
       saveProjectsToStorage();
       renderProjectsList();
+      if (typeof updateDashboardStatCards === 'function') {
+        updateDashboardStatCards();
+      }
+
+      // Dispatch custom events for cross-tab & live sync
+      try {
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('hynaos_projects_updated'));
+      } catch(err) {}
+
       addProjForm.reset();
       if (addProjModal) addProjModal.classList.remove('show');
-      alert(`Project "${name}" created successfully and assigned to team members!`);
+
+      if (typeof showHynaToast === 'function') {
+        showHynaToast(`Project "${name}" created successfully!`, 'folder-plus');
+      } else {
+        alert(`Project "${name}" created successfully and assigned to team members!`);
+      }
     });
   }
 }
@@ -785,5 +817,20 @@ function refreshAllDashboardData(showToast = true) {
 window.refreshAllDashboardData = refreshAllDashboardData;
 window.refreshAll = refreshAllDashboardData;
 window.showHynaToast = showHynaToast;
+
+// Auto-sync projects on storage update
+window.addEventListener('storage', (e) => {
+  if (!e.key || e.key === 'hynaos_projects_list') {
+    loadProjectsFromStorage();
+    renderProjectsList();
+    updateDashboardStatCards();
+  }
+});
+window.addEventListener('hynaos_projects_updated', () => {
+  loadProjectsFromStorage();
+  renderProjectsList();
+  updateDashboardStatCards();
+});
+
 
 

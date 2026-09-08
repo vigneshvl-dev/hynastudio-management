@@ -748,3 +748,16 @@ window.refreshAllDashboardData = refreshAllDashboardData;
 window.refreshAll = refreshAllDashboardData;
 window.showHynaToast = showHynaToast;
 
+// Auto-sync projects on storage update
+window.addEventListener('storage', (e) => {
+  if (!e.key || e.key === 'hynaos_projects_list') {
+    if (typeof renderMyProjects === 'function') renderMyProjects();
+    if (typeof updateEmployeeDashboardStatCards === 'function') updateEmployeeDashboardStatCards();
+  }
+});
+window.addEventListener('hynaos_projects_updated', () => {
+  if (typeof renderMyProjects === 'function') renderMyProjects();
+  if (typeof updateEmployeeDashboardStatCards === 'function') updateEmployeeDashboardStatCards();
+});
+
+
