@@ -37,16 +37,73 @@ function loadUserFromStorage() {
         role: u.role || "employee",
         position: u.position || "Team Member",
         department: u.department || "Hyna Studio",
-        joiningDate: u.joining_date || "2024-03-10",
+        joiningDate: u.joining_date || u.joiningDate || "2024-03-10",
         phone: u.phone || "+91 98765 43210",
         status: u.status || "active",
         initials: initials,
         avatarUrl: savedAvatar
       };
-      console.log("👤 Loaded Logged In Employee Profile:", CURRENT_EMPLOYEE);
     }
   } catch(e) {
     console.warn("Failed to parse stored user profile:", e);
+  }
+
+  // Also check if profile was updated by admin in hynaos_employees_list
+  try {
+    const empListStr = localStorage.getItem('hynaos_employees_list');
+    if (empListStr) {
+      const list = JSON.parse(empListStr);
+      const match = list.find(e => e.id === CURRENT_EMPLOYEE.id || (e.email && e.email.toLowerCase() === CURRENT_EMPLOYEE.email.toLowerCase()));
+      if (match) {
+        CURRENT_EMPLOYEE.name = match.name || CURRENT_EMPLOYEE.name;
+        CURRENT_EMPLOYEE.email = match.email || CURRENT_EMPLOYEE.email;
+        CURRENT_EMPLOYEE.position = match.position || CURRENT_EMPLOYEE.position;
+        CURRENT_EMPLOYEE.department = match.department || CURRENT_EMPLOYEE.department;
+        CURRENT_EMPLOYEE.status = match.status || CURRENT_EMPLOYEE.status;
+        if (match.phone) CURRENT_EMPLOYEE.phone = match.phone;
+
+        const parts = CURRENT_EMPLOYEE.name.trim().split(' ').filter(Boolean);
+        if (parts.length > 1) {
+          CURRENT_EMPLOYEE.initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        } else if (parts[0]) {
+          CURRENT_EMPLOYEE.initials = parts[0].substring(0, 2).toUpperCase();
+        }
+      }
+    }
+  } catch(e) {}
+}
+
+function saveUserToStorage() {
+  try {
+    const stored = localStorage.getItem('hynaos_current_user');
+    let u = stored ? JSON.parse(stored) : {};
+    u.full_name = CURRENT_EMPLOYEE.name;
+    u.name = CURRENT_EMPLOYEE.name;
+    u.email = CURRENT_EMPLOYEE.email;
+    u.position = CURRENT_EMPLOYEE.position;
+    u.department = CURRENT_EMPLOYEE.department;
+    u.phone = CURRENT_EMPLOYEE.phone;
+    if (CURRENT_EMPLOYEE.avatarUrl) u.avatar_url = CURRENT_EMPLOYEE.avatarUrl;
+
+    localStorage.setItem('hynaos_current_user', JSON.stringify(u));
+
+    // Also update in hynaos_employees_list
+    const empListStr = localStorage.getItem('hynaos_employees_list');
+    let list = empListStr ? JSON.parse(empListStr) : [];
+    const idx = list.findIndex(e => e.id === CURRENT_EMPLOYEE.id || (e.email && e.email.toLowerCase() === CURRENT_EMPLOYEE.email.toLowerCase()));
+    if (idx !== -1) {
+      list[idx] = {
+        ...list[idx],
+        name: CURRENT_EMPLOYEE.name,
+        email: CURRENT_EMPLOYEE.email,
+        position: CURRENT_EMPLOYEE.position,
+        department: CURRENT_EMPLOYEE.department,
+        phone: CURRENT_EMPLOYEE.phone
+      };
+      localStorage.setItem('hynaos_employees_list', JSON.stringify(list));
+    }
+  } catch(e) {
+    console.warn("Failed to save user to storage:", e);
   }
 }
 
@@ -112,10 +169,48 @@ let attendanceState = {
   timerInterval: null
 };
 
+function loadEmployeeDataFromStorage() {
+  const empId = CURRENT_EMPLOYEE.id || "EMP-008";
+  
+  // 1. Tasks
+  try {
+    const savedTasks = localStorage.getItem(`hynaos_tasks_${empId}`);
+    if (savedTasks) {
+      myTasksList = JSON.parse(savedTasks);
+    }
+  } catch(e) {}
+
+  // 2. Work Logs
+  try {
+    const savedLogs = localStorage.getItem(`hynaos_worklogs_${empId}`);
+    if (savedLogs) {
+      myWorkLogs = JSON.parse(savedLogs);
+    }
+  } catch(e) {}
+
+  // 3. Leave Requests
+  try {
+    const savedLeaves = localStorage.getItem(`hynaos_leaves_${empId}`);
+    if (savedLeaves) {
+      myLeaveRequests = JSON.parse(savedLeaves);
+    }
+  } catch(e) {}
+}
+
+function saveEmployeeDataToStorage() {
+  const empId = CURRENT_EMPLOYEE.id || "EMP-008";
+  try {
+    localStorage.setItem(`hynaos_tasks_${empId}`, JSON.stringify(myTasksList));
+    localStorage.setItem(`hynaos_worklogs_${empId}`, JSON.stringify(myWorkLogs));
+    localStorage.setItem(`hynaos_leaves_${empId}`, JSON.stringify(myLeaveRequests));
+  } catch(e) {}
+}
+
 // Page Lifecycle Initialization
 document.addEventListener('DOMContentLoaded', async () => {
   // 0. Load Dynamic Logged In User Profile
   loadUserFromStorage();
+  loadEmployeeDataFromStorage();
 
   // 1. Verify Employee Access Security
   await verifyEmployeeAccess();
@@ -329,7 +424,9 @@ function updateTaskStatus(taskId, newStatus) {
   const task = myTasksList.find(t => t.id === taskId);
   if (task) {
     task.status = newStatus;
+    saveEmployeeDataToStorage();
     renderMyTasks();
+    if (typeof updateEmployeeDashboardStatCards === 'function') updateEmployeeDashboardStatCards();
   }
 }
 
@@ -617,9 +714,14 @@ function initForms() {
       };
 
       myWorkLogs.unshift(newLog);
+      saveEmployeeDataToStorage();
       renderMyWorkLogs();
       workForm.reset();
-      alert('Work update log submitted successfully!');
+      if (typeof showHynaToast === 'function') {
+        showHynaToast('Work update log submitted successfully!', 'file-check');
+      } else {
+        alert('Work update log submitted successfully!');
+      }
     });
   }
 
@@ -645,9 +747,14 @@ function initForms() {
       };
 
       myLeaveRequests.unshift(newLeave);
+      saveEmployeeDataToStorage();
       renderMyLeaves();
       leaveForm.reset();
-      alert('Leave request submitted to HR successfully!');
+      if (typeof showHynaToast === 'function') {
+        showHynaToast('Leave request submitted to HR!', 'calendar');
+      } else {
+        alert('Leave request submitted to HR successfully!');
+      }
     });
   }
 }
@@ -658,6 +765,95 @@ window.updateTaskStatus = updateTaskStatus;
 window.submitTaskForReview = submitTaskForReview;
 window.handleProfileImageUpload = handleProfileImageUpload;
 window.removeProfileImage = removeProfileImage;
+window.openEditSelfModal = openEditSelfModal;
+window.closeEditSelfModal = closeEditSelfModal;
+window.saveSelfProfile = saveSelfProfile;
+
+/**
+ * Open Edit Self Profile Modal
+ */
+function openEditSelfModal() {
+  const modal = document.getElementById('editEmployeeSelfModal');
+  const nameInput = document.getElementById('editSelfName');
+  const emailInput = document.getElementById('editSelfEmail');
+  const phoneInput = document.getElementById('editSelfPhone');
+  const deptInput = document.getElementById('editSelfDept');
+  const posInput = document.getElementById('editSelfPos');
+
+  if (nameInput) nameInput.value = CURRENT_EMPLOYEE.name || '';
+  if (emailInput) emailInput.value = CURRENT_EMPLOYEE.email || '';
+  if (phoneInput) phoneInput.value = CURRENT_EMPLOYEE.phone || '';
+  if (deptInput) deptInput.value = CURRENT_EMPLOYEE.department || '';
+  if (posInput) posInput.value = CURRENT_EMPLOYEE.position || '';
+
+  if (modal) modal.classList.add('show');
+}
+
+/**
+ * Close Edit Self Profile Modal
+ */
+function closeEditSelfModal() {
+  const modal = document.getElementById('editEmployeeSelfModal');
+  if (modal) modal.classList.remove('show');
+}
+
+/**
+ * Save Self Profile Changes
+ */
+function saveSelfProfile(e) {
+  if (e) e.preventDefault();
+  const nameInput = document.getElementById('editSelfName');
+  const emailInput = document.getElementById('editSelfEmail');
+  const phoneInput = document.getElementById('editSelfPhone');
+  const deptInput = document.getElementById('editSelfDept');
+  const posInput = document.getElementById('editSelfPos');
+
+  if (!nameInput || !emailInput) return;
+
+  const newName = nameInput.value.trim();
+  const newEmail = emailInput.value.trim();
+  const newPhone = phoneInput ? phoneInput.value.trim() : CURRENT_EMPLOYEE.phone;
+  const newDept = deptInput ? deptInput.value.trim() : CURRENT_EMPLOYEE.department;
+  const newPos = posInput ? posInput.value.trim() : CURRENT_EMPLOYEE.position;
+
+  if (!newName || !newEmail) {
+    alert("Please enter full name and email address.");
+    return;
+  }
+
+  const parts = newName.split(' ').filter(Boolean);
+  let initials = "HE";
+  if (parts.length > 1) {
+    initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  } else if (parts[0]) {
+    initials = parts[0].substring(0, 2).toUpperCase();
+  }
+
+  CURRENT_EMPLOYEE = {
+    ...CURRENT_EMPLOYEE,
+    name: newName,
+    email: newEmail,
+    phone: newPhone,
+    department: newDept,
+    position: newPos,
+    initials: initials
+  };
+
+  saveUserToStorage();
+  renderMyProfile();
+  closeEditSelfModal();
+
+  try {
+    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event('hynaos_employees_updated'));
+  } catch(err) {}
+
+  if (typeof showHynaToast === 'function') {
+    showHynaToast("Profile changes saved successfully!", "check-circle");
+  } else {
+    alert("Profile updated successfully!");
+  }
+}
 
 /**
  * Update Employee Dashboard Stat Cards dynamically

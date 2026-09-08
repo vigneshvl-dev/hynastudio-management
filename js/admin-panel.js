@@ -33,6 +33,28 @@ const INITIAL_PROJECTS = [
 let employeesList = [...INITIAL_EMPLOYEES];
 let projectsList = [...INITIAL_PROJECTS];
 
+function loadEmployeesFromStorage() {
+  try {
+    const stored = localStorage.getItem('hynaos_employees_list');
+    if (stored) {
+      employeesList = JSON.parse(stored);
+    } else {
+      employeesList = [...INITIAL_EMPLOYEES];
+      localStorage.setItem('hynaos_employees_list', JSON.stringify(employeesList));
+    }
+  } catch(e) {
+    employeesList = [...INITIAL_EMPLOYEES];
+  }
+}
+
+function saveEmployeesToStorage() {
+  try {
+    localStorage.setItem('hynaos_employees_list', JSON.stringify(employeesList));
+  } catch(e) {
+    console.warn("Failed to save employees to localStorage:", e);
+  }
+}
+
 function loadProjectsFromStorage() {
   try {
     const stored = localStorage.getItem('hynaos_projects_list');
@@ -80,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initNavigation();
 
   // 3. Render Dashboard Stat Cards & Tables
+  loadEmployeesFromStorage();
   loadProjectsFromStorage();
   populateProjectModalOptions();
   renderEmployeesTable();
@@ -585,11 +608,22 @@ function initModals() {
       };
 
       employeesList.push(newEmp);
+      saveEmployeesToStorage();
+      try {
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('hynaos_employees_updated'));
+      } catch(err) {}
+
       populateProjectModalOptions();
       renderEmployeesTable();
+      if (typeof updateDashboardStatCards === 'function') updateDashboardStatCards();
       addForm.reset();
       if (addModal) addModal.classList.remove('show');
-      alert(`Employee ${name} created successfully!`);
+      if (typeof showHynaToast === 'function') {
+        showHynaToast(`Employee ${name} created!`, 'user-plus');
+      } else {
+        alert(`Employee ${name} created successfully!`);
+      }
     });
   }
 
@@ -632,10 +666,37 @@ function initModals() {
           initials
         };
 
+        saveEmployeesToStorage();
+
+        // Also check if this matches current user profile in storage
+        try {
+          const currStr = localStorage.getItem('hynaos_current_user');
+          if (currStr) {
+            const currUser = JSON.parse(currStr);
+            if (currUser.employee_id === empId || currUser.id === empId || (currUser.email && currUser.email.toLowerCase() === email.toLowerCase())) {
+              currUser.full_name = name;
+              currUser.name = name;
+              currUser.email = email;
+              currUser.department = dept;
+              currUser.position = pos;
+              currUser.status = status;
+              localStorage.setItem('hynaos_current_user', JSON.stringify(currUser));
+            }
+          }
+          window.dispatchEvent(new Event('storage'));
+          window.dispatchEvent(new Event('hynaos_employees_updated'));
+        } catch(err) {}
+
         populateProjectModalOptions();
         renderEmployeesTable();
+        if (typeof updateDashboardStatCards === 'function') updateDashboardStatCards();
         if (editModal) editModal.classList.remove('show');
-        alert(`Employee ${name} (${empId}) updated successfully!`);
+
+        if (typeof showHynaToast === 'function') {
+          showHynaToast(`Employee ${name} updated successfully!`, 'user-check');
+        } else {
+          alert(`Employee ${name} (${empId}) updated successfully!`);
+        }
       }
     });
   }
