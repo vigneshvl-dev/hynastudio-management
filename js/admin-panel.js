@@ -279,7 +279,15 @@ function renderProjectsList() {
             <h4 style="font-size:1.05rem; color:var(--text-white); font-weight:700;">${prj.name}</h4>
             <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:0.2rem;">Deadline: ${prj.deadline || 'No deadline'}</span>
           </div>
-          <span class="badge-status badge-${prj.status}">${prj.status}</span>
+          <div style="display:flex; align-items:center; gap:0.4rem;">
+            <span class="badge-status badge-${prj.status}">${prj.status}</span>
+            <button type="button" class="btn-edit-project" onclick="editProject('${prj.id}')" title="Edit Project">
+              <i data-lucide="edit-3" size="14"></i>
+            </button>
+            <button type="button" class="btn-delete-project" onclick="deleteProject('${prj.id}')" title="Delete Project">
+              <i data-lucide="trash-2" size="14"></i>
+            </button>
+          </div>
         </div>
 
         <p style="font-size:0.8rem; color:var(--text-sub); margin-top:0.4rem; margin-bottom:0.4rem;">${prj.description || ''}</p>
@@ -711,6 +719,71 @@ function initModals() {
       }
     });
   }
+
+  // Edit Project Modal Handler
+  const editProjModal = document.getElementById('editProjectModal');
+  const closeEditProjBtn = document.getElementById('closeEditProjectModalBtn');
+  const editProjForm = document.getElementById('editProjectForm');
+
+  if (closeEditProjBtn && editProjModal) {
+    closeEditProjBtn.addEventListener('click', () => editProjModal.classList.remove('show'));
+  }
+
+  if (editProjForm) {
+    editProjForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editProjectId').value;
+      const name = document.getElementById('editProjectName').value.trim();
+      const lead = document.getElementById('editProjectLead').value;
+      const status = document.getElementById('editProjectStatus').value;
+      const progress = parseInt(document.getElementById('editProjectProgress').value) || 0;
+      const deadline = document.getElementById('editProjectDeadline').value;
+      const description = document.getElementById('editProjectDesc').value.trim();
+
+      const memberCheckboxes = document.querySelectorAll('input[name="editProjectMembers"]:checked');
+      let selectedMembers = Array.from(memberCheckboxes).map(cb => cb.value);
+
+      if (!name || !lead) {
+        alert("Please enter project name and select a project lead.");
+        return;
+      }
+
+      if (!selectedMembers.includes(lead)) {
+        selectedMembers.unshift(lead);
+      }
+
+      const index = projectsList.findIndex(p => p.id === id);
+      if (index !== -1) {
+        projectsList[index] = {
+          ...projectsList[index],
+          name,
+          manager: lead,
+          lead,
+          status,
+          progress,
+          deadline,
+          description,
+          assignedMembers: selectedMembers
+        };
+
+        saveProjectsToStorage();
+        renderProjectsList();
+        if (typeof updateDashboardStatCards === 'function') updateDashboardStatCards();
+
+        try {
+          window.dispatchEvent(new Event('storage'));
+          window.dispatchEvent(new Event('hynaos_projects_updated'));
+        } catch(err) {}
+
+        if (editProjModal) editProjModal.classList.remove('show');
+        if (typeof showHynaToast === 'function') {
+          showHynaToast(`Project "${name}" updated successfully!`, 'edit-3');
+        } else {
+          alert(`Project "${name}" updated successfully!`);
+        }
+      }
+    });
+  }
 }
 
 // Global functions exports
@@ -814,6 +887,90 @@ function refreshAllDashboardData(showToast = true) {
   }, 600);
 }
 
+/**
+ * Delete Project Handler
+ */
+function deleteProject(projectId) {
+  const prj = projectsList.find(p => p.id === projectId);
+  if (!prj) return;
+
+  const confirmed = confirm(`Are you sure you want to delete project "${prj.name}"?`);
+  if (!confirmed) return;
+
+  projectsList = projectsList.filter(p => p.id !== projectId);
+  saveProjectsToStorage();
+  renderProjectsList();
+  if (typeof updateDashboardStatCards === 'function') {
+    updateDashboardStatCards();
+  }
+
+  try {
+    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event('hynaos_projects_updated'));
+  } catch(e) {}
+
+  if (typeof showHynaToast === 'function') {
+    showHynaToast(`Project "${prj.name}" deleted successfully`, 'trash-2');
+  } else {
+    alert(`Project "${prj.name}" deleted successfully.`);
+  }
+}
+
+/**
+ * Edit Project Action Handler
+ */
+function editProject(projectId) {
+  const prj = projectsList.find(p => p.id === projectId);
+  if (!prj) return;
+
+  const modal = document.getElementById('editProjectModal');
+  const idInput = document.getElementById('editProjectId');
+  const nameInput = document.getElementById('editProjectName');
+  const leadSelect = document.getElementById('editProjectLead');
+  const statusSelect = document.getElementById('editProjectStatus');
+  const progressInput = document.getElementById('editProjectProgress');
+  const deadlineInput = document.getElementById('editProjectDeadline');
+  const descInput = document.getElementById('editProjectDesc');
+  const membersGrid = document.getElementById('editProjectMembersList');
+
+  if (idInput) idInput.value = prj.id;
+  if (nameInput) nameInput.value = prj.name || '';
+  if (statusSelect) statusSelect.value = prj.status || 'active';
+  if (progressInput) progressInput.value = prj.progress || 0;
+  if (deadlineInput) deadlineInput.value = prj.deadline || '';
+  if (descInput) descInput.value = prj.description || '';
+
+  // Populate Leads Select
+  if (leadSelect) {
+    leadSelect.innerHTML = `<option value="">-- Select Project Lead --</option>` +
+      employeesList.map(emp => `<option value="${emp.name}">${emp.name} (${emp.position || emp.department})</option>`).join('');
+    leadSelect.value = prj.lead || prj.manager || '';
+  }
+
+  // Populate Members Checkbox Grid
+  if (membersGrid) {
+    const assigned = (prj.assignedMembers || []).map(m => String(m).toLowerCase().trim());
+    membersGrid.innerHTML = employeesList.map(emp => {
+      const isChecked = assigned.some(a => a === emp.name.toLowerCase().trim());
+      return `
+        <label class="checkbox-member-card">
+          <input type="checkbox" name="editProjectMembers" value="${emp.name}" ${isChecked ? 'checked' : ''}>
+          <span>
+            <strong>${emp.name}</strong>
+            <small>${emp.position || emp.department}</small>
+          </span>
+        </label>
+      `;
+    }).join('');
+  }
+
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+window.editProject = editProject;
+window.deleteProject = deleteProject;
 window.refreshAllDashboardData = refreshAllDashboardData;
 window.refreshAll = refreshAllDashboardData;
 window.showHynaToast = showHynaToast;

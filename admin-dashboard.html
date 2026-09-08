@@ -806,6 +806,74 @@
     </div>
   </div>
 
+  <!-- Edit Project Modal Dialog -->
+  <div class="modal-overlay" id="editProjectModal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Edit Project Details ✏️</h3>
+        <button type="button" class="btn-close-modal" id="closeEditProjectModalBtn">
+          <i data-lucide="x" size="20"></i>
+        </button>
+      </div>
+      
+      <form id="editProjectForm" class="auth-form">
+        <input type="hidden" id="editProjectId">
+        
+        <div class="form-group">
+          <label for="editProjectName">Project Name</label>
+          <input type="text" id="editProjectName" class="form-control" placeholder="Project Name" required>
+        </div>
+
+        <div class="form-grid-3" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+          <div class="form-group">
+            <label for="editProjectLead">Project Lead</label>
+            <select id="editProjectLead" class="form-control" required>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editProjectStatus">Status</label>
+            <select id="editProjectStatus" class="form-control" required>
+              <option value="active">Active</option>
+              <option value="completed">Completed</option>
+              <option value="onhold">On Hold</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editProjectProgress">Progress (%)</label>
+            <input type="number" id="editProjectProgress" class="form-control" min="0" max="100" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editProjectDeadline">Target Deadline</label>
+          <input type="date" id="editProjectDeadline" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label style="display:block; margin-bottom:0.5rem; font-weight:700; font-size:0.8rem; color:var(--text-sub);">
+            Assign Team Members
+          </label>
+          <div id="editProjectMembersList" class="project-members-selector" style="max-height:160px; overflow-y:auto; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:0.75rem; display:grid; grid-template-columns:repeat(2, 1fr); gap:0.5rem;">
+            <!-- Dynamically populated checkboxes -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editProjectDesc">Project Description / Brief</label>
+          <textarea id="editProjectDesc" class="form-control" rows="3" placeholder="Brief explanation of project..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:1.25rem; justify-content:center;">
+          <span>SAVE PROJECT CHANGES 💾</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/supabase.js"></script>
   <script src="js/auth.js"></script>
