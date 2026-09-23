@@ -239,34 +239,39 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Verify Employee Security Access
  */
 async function verifyEmployeeAccess() {
-  const { getClient, isDemoMode } = window.HYNAOS_SUPABASE || {};
-
-  if (isDemoMode() || !getClient()) {
-    console.log("⚡ Employee Panel: Authorized (Demo Mode).");
-    return;
-  }
+  const { getClient } = window.HYNAOS_SUPABASE || {};
 
   try {
-    const supabase = getClient();
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
+    const supabase = getClient ? getClient() : null;
+    if (!supabase) {
       window.location.href = 'employee-login.html';
       return;
     }
 
-    const { data: profile } = await supabase
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (!session || sessionError) {
+      window.location.href = 'employee-login.html';
+      return;
+    }
+
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', session.user.id)
       .single();
 
-    if (!profile || profile.role !== 'employee') {
+    if (profileError || !profile || profile.role !== 'employee') {
       alert("Unauthorized Access: Employee credentials required.");
       window.location.href = 'employee-login.html';
+      return;
     }
+
+    // Security check passed, reveal content
+    document.body.classList.add('authenticated');
   } catch (err) {
     console.error("Security check failed:", err);
+    window.location.href = 'employee-login.html';
   }
 }
 

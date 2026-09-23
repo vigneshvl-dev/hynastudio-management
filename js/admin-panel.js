@@ -126,35 +126,39 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Verify Admin Security Access
  */
 async function verifyAdminAccess() {
-  const { getClient, isDemoMode } = window.HYNAOS_SUPABASE || {};
-
-  // Check demo mode or real Supabase auth
-  if (!isDemoMode || isDemoMode() || !getClient || !getClient()) {
-    console.log("⚡ Admin Panel: Authorized (Demo Mode).");
-    return;
-  }
+  const { getClient } = window.HYNAOS_SUPABASE || {};
 
   try {
-    const supabase = getClient();
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
+    const supabase = getClient ? getClient() : null;
+    if (!supabase) {
       window.location.href = 'admin-login.html';
       return;
     }
 
-    const { data: profile } = await supabase
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (!session || sessionError) {
+      window.location.href = 'admin-login.html';
+      return;
+    }
+
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', session.user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (profileError || !profile || profile.role !== 'admin') {
       alert("Unauthorized Access: Administrator credentials required.");
       window.location.href = 'admin-login.html';
+      return;
     }
+
+    // Security check passed, reveal content
+    document.body.classList.add('authenticated');
   } catch (err) {
     console.error("Security check failed:", err);
+    window.location.href = 'admin-login.html';
   }
 }
 

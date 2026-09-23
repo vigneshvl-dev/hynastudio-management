@@ -4,6 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HYNA OS — Admin Panel</title>
+  
+  <!-- Strict Endpoint Security: Synchronous Block -->
+  <script>
+    (function() {
+      try {
+        const userStr = localStorage.getItem('hynaos_current_user');
+        if (!userStr) { window.location.replace('admin-login.html'); return; }
+        const user = JSON.parse(userStr);
+        if (!user || user.role !== 'admin') { window.location.replace('admin-login.html'); }
+      } catch (e) {
+        window.location.replace('admin-login.html');
+      }
+    })();
+  </script>
+
   <meta name="description" content="HYNA OS Admin Panel — Hyna Studio Management System internal control center.">
   
   <!-- Google Fonts -->

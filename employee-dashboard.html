@@ -3,8 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HYNA OS — Employee Panel</title>
-  <meta name="description" content="HYNA OS Employee Panel — Hyna Studio Management System personal workspace.">
+  <title>HYNA OS — Employee Workspace</title>
+  
+  <!-- Strict Endpoint Security: Synchronous Block -->
+  <script>
+    (function() {
+      try {
+        const userStr = localStorage.getItem('hynaos_current_user');
+        if (!userStr) { window.location.replace('employee-login.html'); return; }
+        const user = JSON.parse(userStr);
+        if (!user || user.role !== 'employee') { window.location.replace('employee-login.html'); }
+      } catch (e) {
+        window.location.replace('employee-login.html');
+      }
+    })();
+  </script>
+
+  <meta name="description" content="HYNA OS Employee Workspace — Manage your daily tasks, logs, and profile.">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
